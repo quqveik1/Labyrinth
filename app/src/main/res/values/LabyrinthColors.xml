@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="labyrinthBackground">#D81B60</color>
+    <color name="labyrinthNet">#43A047</color>
+    <color name="wall">#3949AB</color>
+
+</resources>

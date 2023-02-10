@@ -21,11 +21,12 @@ import com.kurlic.labirints.R;
 public class LabyrinthView extends View {
 
     private int w,h;
-    int strokeWidthDp = 2;
+    int strokeWidthDp = 1;
     int strokeWidthPixels;
     int cxCell = 10;
     int cyCell = 20;
     double oneCellSize;
+    LabyrinthCell[][] labyrinthCells;
 
     Character character;
 
@@ -53,6 +54,24 @@ public class LabyrinthView extends View {
     void commonConstructor()
     {
         character = new Character(this);
+        cellsConstructor();
+
+    }
+
+    void cellsConstructor()
+    {
+        labyrinthCells = new LabyrinthCell[cxCell][cyCell];
+
+        for(int x = 0; x < cxCell; x++)
+        {
+            for(int y = 0; y < cyCell; y++)
+            {
+                labyrinthCells[x][y] = new EmptyCell(this);
+            }
+        }
+        labyrinthCells[0][4] = new WallCell(this);
+        labyrinthCells[4][0] = new WallCell(this);
+
     }
 
     @Override
@@ -70,21 +89,25 @@ public class LabyrinthView extends View {
         drawNet(paint, canvas);
 
         character.setCellSize(getOneCellSize());
+        drawCells(paint, canvas);
         character.draw(canvas, paint);
 
     }
 
-    public double getOneCellSize() {
-        oneCellSize = (float)getWidth() / (float)cxCell;
-        return oneCellSize;
-    }
+    void drawCells(@NonNull Paint paint, @NonNull Canvas canvas)
+    {
+        for(int x = 0; x < cxCell; x++)
+        {
+            for (int y = 0; y < cyCell; y++)
+            {
+                Point start = toPixelCoordinates(x, y);
+                Rect cellRect = new Rect(start.x, start.y, (int) (start.x + oneCellSize), (int) (start.y + oneCellSize));
+                labyrinthCells[x][y].draw(canvas, paint, cellRect);
 
-    public int getStrokeWidthPixels() {
-        strokeWidthPixels = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, strokeWidthDp, getResources().getDisplayMetrics());
-        return strokeWidthPixels;
-    }
+            }
+        }
 
+    }
     void drawNet (@NonNull Paint paint, Canvas canvas)
     {
         paint.setColor(getResources().getColor(R.color.labyrinthNet));
@@ -108,6 +131,17 @@ public class LabyrinthView extends View {
 
     //DrawSection end
 
+    public double getOneCellSize() {
+        oneCellSize = (float)getWidth() / (float)cxCell;
+        return oneCellSize;
+    }
+
+    public int getStrokeWidthPixels() {
+        strokeWidthPixels = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, strokeWidthDp, getResources().getDisplayMetrics());
+        return strokeWidthPixels;
+    }
+
 
 
     @Override
@@ -120,14 +154,28 @@ public class LabyrinthView extends View {
 
             Point cell = toCellCoordinates(x, y);
 
-            Toast.makeText(getContext(), "x: " + cell.x + " y: " + cell.y, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "x: " + cell.x + " y: " + cell.y, Toast.LENGTH_SHORT).show();
             character.setCoordinates(cell);
-
         }
 
 
         return true;
 
+    }
+
+    public LabyrinthCell getCell(int x, int y)
+    {
+        return labyrinthCells[x][y];
+    }
+
+    public boolean canEnterCell(int x, int y)
+    {
+        return labyrinthCells[x][y].canEnter(character);
+    }
+
+    public boolean canEnterCell(@NonNull Point point)
+    {
+        return canEnterCell(point.x, point.y);
     }
 
     public Point toCellCoordinates(int x, int y)
@@ -137,6 +185,10 @@ public class LabyrinthView extends View {
         try {
             int xnum = (int) (x / getOneCellSize());
             int ynum = (int) (y / getOneCellSize());
+            xnum = Integer.max(xnum, 0);
+            ynum = Integer.max(ynum, 0);
+            xnum = Integer.min(xnum, cxCell - 1);
+            ynum = Integer.min(ynum, cyCell - 1);
 
             answer.set(xnum, ynum);
         }
@@ -163,6 +215,11 @@ public class LabyrinthView extends View {
 
         int xnum = (int) (x * getOneCellSize());
         int ynum = (int) (y * getOneCellSize());
+
+        xnum = Integer.max(xnum, 0);
+        ynum = Integer.max(ynum, 0);
+        xnum = Integer.min(xnum, getWidth() - 1);
+        ynum = Integer.min(ynum, getHeight() - 1);
 
         answer.set(xnum, ynum);
 
