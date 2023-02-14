@@ -3,5 +3,7 @@
     <color name="labyrinthBackground">#D81B60</color>
     <color name="labyrinthNet">#43A047</color>
     <color name="wall">#3949AB</color>
+    <color name="teleport">#673AB7</color>
+
 
 </resources>

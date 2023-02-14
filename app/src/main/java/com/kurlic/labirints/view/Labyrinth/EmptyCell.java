@@ -18,7 +18,7 @@ public class EmptyCell extends LabyrinthCell{
     }
 
     @Override
-    public void onCharacterMove(Character character) {
+    public void onCharacterMove(Character character, @NonNull Point moveDelta) {
 
     }
 

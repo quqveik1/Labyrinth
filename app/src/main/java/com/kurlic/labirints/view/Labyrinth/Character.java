@@ -1,6 +1,7 @@
 package com.kurlic.labirints.view.Labyrinth;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.graphics.Point;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 
 import com.kurlic.labirints.R;
 
@@ -21,6 +23,8 @@ public class Character {
     LabyrinthView labyrinthView;
     double cellSize;
 
+    double maxRelativeMissClick = 0.3;
+
     public Character(LabyrinthView labyrinthView) {
         super();
         this.labyrinthView = labyrinthView;
@@ -29,34 +33,62 @@ public class Character {
 
     private void setX(int x)
     {
-        coordinates.x = x;
-        labyrinthView.invalidate();
+        setCoordinates(new Point(x, coordinates.y));
     }
 
     private void setY(int y)
     {
-        coordinates.y = y;
-        labyrinthView.invalidate();
+        setCoordinates(new Point(coordinates.x, y));
     }
 
-    public void setCoordinates(Point newCoordinates) {
-        if(checkOnlyOneDirection(newCoordinates) == true)
-        {
-
-            if (this.coordinates != newCoordinates) {
-                labyrinthView.invalidate();
+    public void moveTo(Point newCoordinates)
+    {
+        if(isCoordinatesSuitable(newCoordinates)) {
+            newCoordinates = oneDirectionCell(newCoordinates);
+            if (checkOnlyOneDirection(newCoordinates) == true) {
+                if (this.coordinates != newCoordinates) {
+                    labyrinthView.invalidate();
+                    startMoving(newCoordinates);
+                }
+            } else {
+                Toast.makeText(labyrinthView.getContext(), "Перемешаться можно только по одной оси!", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
 
-            startMoving(newCoordinates);
-        }
-        else
+    public void move(@NonNull Point moveDelta)
+    {
+        Point newCoordinates = new Point();
+        newCoordinates.x = getCoordinates().x + moveDelta.x;
+        newCoordinates.y = getCoordinates().y + moveDelta.y;
+
+        moveTo(newCoordinates);
+    }
+
+    public boolean isCoordinatesSuitable(@NonNull Point newCoordinates)
+    {
+        if(newCoordinates.x < labyrinthView.getCxCell() && newCoordinates.y < labyrinthView.getCyCell())
         {
-            Toast.makeText(labyrinthView.getContext(), "Перемешаться можно только по одной оси!", Toast.LENGTH_SHORT).show();
+            if(newCoordinates.x >= 0 && newCoordinates.y >= 0)
+            {
+                return true;
+            }
         }
+        return false;
+    }
+
+    public Point getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(Point coordinates) {
+        this.coordinates = coordinates;
+        labyrinthView.invalidate();
     }
 
     void startMoving(@NonNull Point newCoordinates)
     {
+        Point deltaMove = new Point();
         if(newCoordinates.x - coordinates.x != 0)
         {
             int delta = 1;
@@ -72,6 +104,8 @@ public class Character {
                 }
                 else
                 {
+                    deltaMove.x = newCoordinates.x - getCoordinates().x;
+                    deltaMove.y = newCoordinates.y - getCoordinates().y;
                     setX(pos);
                     labyrinthView.getCell(pos, coordinates.y).onEnter(this);
                     if(pos == newCoordinates.x)
@@ -97,6 +131,8 @@ public class Character {
                 }
                 else
                 {
+                    deltaMove.x = newCoordinates.x - getCoordinates().x;
+                    deltaMove.y = newCoordinates.y - getCoordinates().y;
                     setY(pos);
                     labyrinthView.getCell(coordinates.x, pos).onEnter(this);
                     if(pos == newCoordinates.y)
@@ -106,17 +142,67 @@ public class Character {
                 }
             }
         }
+        onMoveNotify(newCoordinates, deltaMove);
     }
 
-    boolean checkOnlyOneDirection(@NonNull Point coordinates)
+    private void onMoveNotify(Point newCoordinates, Point delta)
     {
-        int dx = coordinates.x - this.coordinates.x;
-        int dy = coordinates.y - this.coordinates.y;
+        int cxCell = labyrinthView.getCxCell();
+        int cyCell = labyrinthView.getCyCell();
+        for(int x = 0; x < cxCell; x++)
+        {
+            for(int y = 0; y < cyCell; y++)
+            {
+                LabyrinthCell labyrinthCell = labyrinthView.getCell(x, y);
+                labyrinthCell.onCharacterMove(this, delta);
+            }
+        }
+    }
+
+
+
+    boolean checkOnlyOneDirection(@NonNull Point newCoordinates)
+    {
+        int dx = newCoordinates.x - this.coordinates.x;
+        int dy = newCoordinates.y - this.coordinates.y;
+
+        if(dx == 0 && dy == 0)
+        {
+            return true;
+        }
         if(dx == 0 ^ dy == 0)
         {
             return true;
         }
         return false;
+    }
+
+    Point oneDirectionCell(@NonNull Point newCoordinates)
+    {
+        int dx = newCoordinates.x - this.coordinates.x;
+        int dy = newCoordinates.y - this.coordinates.y;
+        if(Math.abs(dx) > Math.abs(dy))
+        {
+            if(dx != 0) {
+                if (Math.abs((float)dy / (float)dx) <= maxRelativeMissClick) {
+                    dy = 0;
+                }
+            }
+        }
+        if(Math.abs(dx) < Math.abs(dy))
+        {
+            if(dy != 0) {
+                if (Math.abs((float)dx / (float)dy) <= maxRelativeMissClick) {
+                    dx = 0;
+                }
+            }
+        }
+        Point answer = new Point();
+        answer.x = getCoordinates().x + dx;
+        answer.y = getCoordinates().y + dy;
+
+        return answer;
+
     }
 
 

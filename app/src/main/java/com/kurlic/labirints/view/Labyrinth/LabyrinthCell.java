@@ -18,7 +18,7 @@ public abstract class LabyrinthCell {
     }
     abstract public void draw(@NonNull Canvas canvas, @NonNull Paint paint, @NonNull Rect rect);
 
-    abstract public void onCharacterMove(@NonNull Character character);
+    abstract public void onCharacterMove(@NonNull Character character, @NonNull Point moveDelta);
 
     abstract public boolean canEnter(@NonNull Character character);
 

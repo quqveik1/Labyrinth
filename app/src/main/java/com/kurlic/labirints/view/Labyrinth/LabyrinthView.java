@@ -23,12 +23,13 @@ public class LabyrinthView extends View {
     private int w,h;
     int strokeWidthDp = 1;
     int strokeWidthPixels;
+
     int cxCell = 10;
     int cyCell = 20;
     double oneCellSize;
     LabyrinthCell[][] labyrinthCells;
 
-    Character character;
+    private Character character;
 
 
     public LabyrinthView(Context context) {
@@ -71,6 +72,8 @@ public class LabyrinthView extends View {
         }
         labyrinthCells[0][4] = new WallCell(this);
         labyrinthCells[4][0] = new WallCell(this);
+
+        labyrinthCells[1][5] = new TeleportCell(this, new Point(5, 4));
 
     }
 
@@ -143,21 +146,24 @@ public class LabyrinthView extends View {
     }
 
 
-
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event)
     {
-        if(event.getAction() == MotionEvent.ACTION_UP)
-        {
+
+        if(event.getAction() == MotionEvent.ACTION_UP) {
             int x = (int) event.getX();
             int y = (int) event.getY();
+            if(x >= 0 && y >= 0) {
+                if (x <= getWidth() && y <= getHeight()) {
 
-            Point cell = toCellCoordinates(x, y);
 
-            //Toast.makeText(getContext(), "x: " + cell.x + " y: " + cell.y, Toast.LENGTH_SHORT).show();
-            character.setCoordinates(cell);
+                    Point cell = toCellCoordinates(x, y);
+
+                    //Toast.makeText(getContext(), "x: " + cell.x + " y: " + cell.y, Toast.LENGTH_SHORT).show();
+                    character.moveTo(cell);
+                }
+            }
         }
-
 
         return true;
 
@@ -207,7 +213,21 @@ public class LabyrinthView extends View {
 
     }
 
+    public int getCxCell() {
+        return cxCell;
+    }
 
+    public void setCxCell(int cxCell) {
+        this.cxCell = cxCell;
+    }
+
+    public int getCyCell() {
+        return cyCell;
+    }
+
+    public void setCyCell(int cyCell) {
+        this.cyCell = cyCell;
+    }
 
     public Point toPixelCoordinates(int x, int y)
     {
@@ -233,7 +253,7 @@ public class LabyrinthView extends View {
 
     }
 
-
-
-
+    public Character getCharacter() {
+        return character;
+    }
 }
