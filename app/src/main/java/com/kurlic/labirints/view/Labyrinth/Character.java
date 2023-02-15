@@ -82,23 +82,25 @@ public class Character {
     }
 
     public void setCoordinates(Point coordinates) {
-        this.coordinates = coordinates;
-        labyrinthView.invalidate();
+        if(isCoordinatesSuitable(coordinates)) {
+            this.coordinates = coordinates;
+            labyrinthView.invalidate();
+        }
     }
 
     void startMoving(@NonNull Point newCoordinates)
     {
         Point deltaMove = new Point();
-        if(newCoordinates.x - coordinates.x != 0)
+        if(newCoordinates.x - getCoordinates().x != 0)
         {
             int delta = 1;
-            if(newCoordinates.x < coordinates.x)
+            if(newCoordinates.x < getCoordinates().x)
             {
                 delta = -1;
             }
-            for(int pos = coordinates.x + delta; ; pos += delta)
+            for(int pos = getCoordinates().x + delta; ; pos += delta)
             {
-                if(!labyrinthView.canEnterCell(pos, coordinates.y))
+                if(!labyrinthView.canEnterCell(pos, getCoordinates().y))
                 {
                     break;
                 }
@@ -107,7 +109,7 @@ public class Character {
                     deltaMove.x = newCoordinates.x - getCoordinates().x;
                     deltaMove.y = newCoordinates.y - getCoordinates().y;
                     setX(pos);
-                    labyrinthView.getCell(pos, coordinates.y).onEnter(this);
+                    labyrinthView.getCell(pos, getCoordinates().y).onEnter(this);
                     if(pos == newCoordinates.x)
                     {
                         break;
@@ -116,16 +118,16 @@ public class Character {
             }
         }
 
-        if(newCoordinates.y - coordinates.y != 0)
+        if(newCoordinates.y - getCoordinates().y != 0)
         {
             int delta = 1;
-            if(newCoordinates.y < coordinates.y)
+            if(newCoordinates.y < getCoordinates().y)
             {
                 delta = -1;
             }
-            for(int pos = coordinates.y + delta; ; pos += delta)
+            for(int pos = getCoordinates().y + delta; ; pos += delta)
             {
-                if(!labyrinthView.canEnterCell(coordinates.x, pos))
+                if(!labyrinthView.canEnterCell(getCoordinates().x, pos))
                 {
                     break;
                 }
@@ -134,7 +136,7 @@ public class Character {
                     deltaMove.x = newCoordinates.x - getCoordinates().x;
                     deltaMove.y = newCoordinates.y - getCoordinates().y;
                     setY(pos);
-                    labyrinthView.getCell(coordinates.x, pos).onEnter(this);
+                    labyrinthView.getCell(getCoordinates().x, pos).onEnter(this);
                     if(pos == newCoordinates.y)
                     {
                         break;

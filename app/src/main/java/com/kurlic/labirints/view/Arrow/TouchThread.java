@@ -10,7 +10,7 @@ public class TouchThread extends Thread{
     private LabyrinthView labyrinthView;
     private Point moveDelta;
     private int oneMoveTimeDelta;
-    private boolean needToRun;
+    private boolean needToRun = true;
 
 
     public TouchThread(int oneMoveTimeDelta, Point moveDelta) {
@@ -22,7 +22,6 @@ public class TouchThread extends Thread{
     @Override
     public void run() {
         super.run();
-        needToRun = true;
         try {
 
             while (needToRun) {

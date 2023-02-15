@@ -10,6 +10,7 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,6 +78,8 @@ public class Arrow extends View {
         this.labyrinthView = labyrinthView;
     }
 
+
+
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         Paint paint = new Paint();
@@ -121,6 +124,8 @@ public class Arrow extends View {
         triangle.close();
         return  triangle;
     }
+
+
     @NonNull
     private Path drawRight()
     {

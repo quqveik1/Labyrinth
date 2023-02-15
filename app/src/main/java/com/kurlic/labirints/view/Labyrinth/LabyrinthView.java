@@ -1,5 +1,8 @@
 package com.kurlic.labirints.view.Labyrinth;
 
+import static android.view.View.MeasureSpec.EXACTLY;
+import static android.view.View.MeasureSpec.makeMeasureSpec;
+
 import android.app.Notification;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,7 +24,7 @@ import com.kurlic.labirints.R;
 
 public class LabyrinthView extends View {
 
-    private int w,h;
+    private int w, h;
     int strokeWidthDp = 1;
     int strokeWidthPixels;
 
@@ -52,21 +56,17 @@ public class LabyrinthView extends View {
         commonConstructor();
     }
 
-    void commonConstructor()
-    {
+    void commonConstructor() {
         character = new Character(this);
         cellsConstructor();
 
     }
 
-    void cellsConstructor()
-    {
+    void cellsConstructor() {
         labyrinthCells = new LabyrinthCell[cxCell][cyCell];
 
-        for(int x = 0; x < cxCell; x++)
-        {
-            for(int y = 0; y < cyCell; y++)
-            {
+        for (int x = 0; x < cxCell; x++) {
+            for (int y = 0; y < cyCell; y++) {
                 labyrinthCells[x][y] = new EmptyCell(this);
             }
         }
@@ -78,8 +78,16 @@ public class LabyrinthView extends View {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int halfWidthSpec = MeasureSpec.makeMeasureSpec((int) (MeasureSpec.getSize(heightMeasureSpec) / 2), MeasureSpec.AT_MOST);
+        super.onMeasure(halfWidthSpec, heightMeasureSpec);
+    }
+
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         Paint paint = new Paint();
         paint.setColor(getResources().getColor(R.color.labyrinthBackground));
         paint.setStyle(Paint.Style.FILL);
