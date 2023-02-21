@@ -1,4 +1,4 @@
-package com.kurlic.labirints.view.Labyrinth;
+package com.kurlic.labirints.view.Labyrinth.Cells;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -8,20 +8,25 @@ import android.graphics.Rect;
 import androidx.annotation.NonNull;
 
 import com.kurlic.labirints.R;
+import com.kurlic.labirints.view.Labyrinth.Character;
+import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
-public class WallCell extends LabyrinthCell{
+public class WallCell extends LabyrinthCell
+{
 
 
 
-    WallCell(LabyrinthView labyrinthView) {
-        super(labyrinthView);
+    public WallCell(LabyrinthView labyrinthView, int x, int y) {
+        super(labyrinthView, x, y);
     }
 
     @Override
     public void draw(@NonNull Canvas canvas, @NonNull Paint paint, @NonNull Rect rect) {
+
         paint.setColor(labyrinthView.getResources().getColor(R.color.wall));
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRect(rect, paint);
+        super.draw(canvas, paint, rect);
     }
 
 

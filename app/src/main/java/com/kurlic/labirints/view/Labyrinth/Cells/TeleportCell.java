@@ -1,29 +1,33 @@
-package com.kurlic.labirints.view.Labyrinth;
+package com.kurlic.labirints.view.Labyrinth.Cells;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.kurlic.labirints.R;
+import com.kurlic.labirints.view.Labyrinth.Character;
+import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
-public class TeleportCell extends  LabyrinthCell{
+public class TeleportCell extends LabyrinthCell
+{
     Point teleportDest;
 
 
-    TeleportCell(LabyrinthView labyrinthView, Point teleportDest) {
-        super(labyrinthView);
+    public TeleportCell(LabyrinthView labyrinthView, int x, int y, Point teleportDest) {
+        super(labyrinthView, x, y);
         setTeleportDest(teleportDest);
     }
 
     @Override
     public void draw(@NonNull Canvas canvas, @NonNull Paint paint, @NonNull Rect rect) {
+
         paint.setColor(labyrinthView.getResources().getColor(R.color.teleport));
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRect(rect, paint);
+        super.draw(canvas, paint, rect);
     }
 
     @Override

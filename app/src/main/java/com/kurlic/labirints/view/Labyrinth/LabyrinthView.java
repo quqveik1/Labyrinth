@@ -1,26 +1,28 @@
 package com.kurlic.labirints.view.Labyrinth;
 
-import static android.view.View.MeasureSpec.EXACTLY;
-import static android.view.View.MeasureSpec.makeMeasureSpec;
-
-import android.app.Notification;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.kurlic.labirints.R;
+import com.kurlic.labirints.view.Labyrinth.Cells.EmptyCell;
+import com.kurlic.labirints.view.Labyrinth.Cells.FinishCell;
+import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
+import com.kurlic.labirints.view.Labyrinth.Cells.StartCell;
+import com.kurlic.labirints.view.Labyrinth.Cells.TeleportCell;
+import com.kurlic.labirints.view.Labyrinth.Cells.WallCell;
 
 public class LabyrinthView extends View {
 
@@ -32,6 +34,7 @@ public class LabyrinthView extends View {
     int cyCell = 20;
     double oneCellSize;
     LabyrinthCell[][] labyrinthCells;
+    LabyrinthCell startCell;
 
     private Character character;
 
@@ -63,24 +66,112 @@ public class LabyrinthView extends View {
     }
 
     void cellsConstructor() {
-        labyrinthCells = new LabyrinthCell[cxCell][cyCell];
+        labyrinthCells = new LabyrinthCell[getCxCell()][getCyCell()];
 
-        for (int x = 0; x < cxCell; x++) {
-            for (int y = 0; y < cyCell; y++) {
-                labyrinthCells[x][y] = new EmptyCell(this);
+        for (int x = 0; x < getCxCell(); x++)
+        {
+            for (int y = 0; y < getCyCell(); y++)
+            {
+                setLabyrinthCell(new EmptyCell(this, x, y));
             }
         }
-        labyrinthCells[0][4] = new WallCell(this);
-        labyrinthCells[4][0] = new WallCell(this);
 
-        labyrinthCells[1][5] = new TeleportCell(this, new Point(5, 4));
+        try
+        {
+            StartCell startCell = new StartCell(this, 0, 0);
+            setLabyrinthCell(startCell);
+            setStartCell(startCell);
 
+            setLevel();
+
+            setLabyrinthCell(new FinishCell(this, 9, 19));
+        }
+        catch (Exception e)
+        {
+            //Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void setLevel()
+    {
+        setLabyrinthCell(new WallCell(this, 7, 0));
+
+        setLabyrinthCell(new WallCell(this, 1, 1));
+        setLabyrinthCell(new WallCell(this, 2, 1));
+        setLabyrinthCell(new WallCell(this, 3, 1));
+        setLabyrinthCell(new WallCell(this, 5, 1));
+        setLabyrinthCell(new WallCell(this, 7, 1));
+
+        setLabyrinthCell(new WallCell(this, 1, 2));
+        setLabyrinthCell(new WallCell(this, 3, 2));
+        setLabyrinthCell(new WallCell(this, 5, 2));
+
+        setLabyrinthCell(new WallCell(this, 1, 4));
+        setLabyrinthCell(new WallCell(this, 3, 4));
+        setLabyrinthCell(new WallCell(this, 5, 4));
+        setLabyrinthCell(new WallCell(this, 6, 4));
+        setLabyrinthCell(new WallCell(this, 7, 4));
+
+        setLabyrinthCell(new WallCell(this, 7, 1));
+
+    }
+
+    public void setLabyrinthCell(LabyrinthCell labyrinthCell, int x, int y)
+    {
+        if(0 <= x && x < getCxCell() && 0 <= y && y < getCyCell())
+        {
+            labyrinthCells[x][y] = labyrinthCell;
+        }
+    }
+
+    public void setLabyrinthCell(@NonNull LabyrinthCell labyrinthCell)
+    {
+        Point coordinates = labyrinthCell.getLabyrinthPosition();
+        if(0 <= coordinates.x && coordinates.x < getCxCell() && 0 <= coordinates.y && coordinates.y < getCyCell())
+        {
+            labyrinthCells[coordinates.x][coordinates.y] = labyrinthCell;
+        }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int halfWidthSpec = MeasureSpec.makeMeasureSpec((int) (MeasureSpec.getSize(heightMeasureSpec) / 2), MeasureSpec.AT_MOST);
-        super.onMeasure(halfWidthSpec, heightMeasureSpec);
+
+        Point requiredSize = getOnMeasureSize(heightMeasureSpec);
+
+        int wRequiredMeasureSpecs = MeasureSpec.makeMeasureSpec(requiredSize.x, MeasureSpec.EXACTLY);
+        int hRequiredMeasureSpecs = MeasureSpec.makeMeasureSpec(requiredSize.y, MeasureSpec.EXACTLY);
+        super.onMeasure(wRequiredMeasureSpecs, hRequiredMeasureSpecs);
+    }
+
+    @NonNull
+    Point getOnMeasureSize(int heightMeasureSpec)
+    {
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point screenSize = new Point();
+        display.getSize(screenSize);
+
+
+        int height = (int) (screenSize.y * 0.70);
+        int halfOfHeight = height / 2;
+
+        Point answer = new Point();
+
+
+        if(halfOfHeight > screenSize.x)
+        {
+            answer.x = screenSize.x;
+            answer.y = answer.x * 2;
+        }
+        else
+        {
+            answer.x = halfOfHeight;
+            answer.y = height;
+        }
+
+
+        return answer;
     }
 
 
@@ -177,6 +268,37 @@ public class LabyrinthView extends View {
 
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh)
+    {
+        super.onSizeChanged(w, h, oldw, oldh);
+        for(int x = 0; x < getCxCell(); x++)
+        {
+            for(int y = 0; y < getCyCell(); y++)
+            {
+                LabyrinthCell labyrinthCell = getCell(x, y);
+                if(labyrinthCell != null) labyrinthCell.onCellSize((int) getOneCellSize());
+            }
+        }
+    }
+
+    public Point getCellPosition(LabyrinthCell cell)
+    {
+        Point answer = new Point();
+        for(int x = 0; x < getCxCell(); x++)
+        {
+            for (int y = 0; y < getCyCell(); y++)
+            {
+                if(cell == getCell(x, y))
+                {
+                    answer.set(x, y);
+                }
+            }
+        }
+
+        return answer;
+    }
+
     public LabyrinthCell getCell(int x, int y)
     {
         return labyrinthCells[x][y];
@@ -208,7 +330,7 @@ public class LabyrinthView extends View {
         }
         catch (Exception e)
         {
-            Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
         }
 
         return answer;
@@ -259,6 +381,21 @@ public class LabyrinthView extends View {
     {
         return toPixelCoordinates(point.x, point.y);
 
+    }
+
+    public void endLevel()
+    {
+        getCharacter().setCoordinates(getStartCell().getLabyrinthPosition());
+    }
+
+    public LabyrinthCell getStartCell()
+    {
+        return startCell;
+    }
+
+    public void setStartCell(LabyrinthCell startCell)
+    {
+        this.startCell = startCell;
     }
 
     public Character getCharacter() {
