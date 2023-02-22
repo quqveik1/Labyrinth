@@ -30,8 +30,8 @@ public class LabyrinthView extends View {
     int strokeWidthDp = 1;
     int strokeWidthPixels;
 
-    int cxCell = 10;
-    int cyCell = 20;
+    int cxCell = 9;
+    int cyCell = 19;
     double oneCellSize;
     LabyrinthCell[][] labyrinthCells;
     LabyrinthCell startCell;
@@ -72,7 +72,14 @@ public class LabyrinthView extends View {
         {
             for (int y = 0; y < getCyCell(); y++)
             {
-                setLabyrinthCell(new EmptyCell(this, x, y));
+                if (false)
+                {
+                    setLabyrinthCell(new WallCell(this, x, y));
+                }
+                else
+                {
+                    setLabyrinthCell(new EmptyCell(this, x, y));
+                }
             }
         }
 
@@ -84,7 +91,7 @@ public class LabyrinthView extends View {
 
             setLevel();
 
-            setLabyrinthCell(new FinishCell(this, 9, 19));
+            setLabyrinthCell(new FinishCell(this, getCxCell() - 1, getCyCell() - 1));
         }
         catch (Exception e)
         {
@@ -95,25 +102,9 @@ public class LabyrinthView extends View {
 
     private void setLevel()
     {
-        setLabyrinthCell(new WallCell(this, 7, 0));
 
-        setLabyrinthCell(new WallCell(this, 1, 1));
-        setLabyrinthCell(new WallCell(this, 2, 1));
-        setLabyrinthCell(new WallCell(this, 3, 1));
-        setLabyrinthCell(new WallCell(this, 5, 1));
-        setLabyrinthCell(new WallCell(this, 7, 1));
-
-        setLabyrinthCell(new WallCell(this, 1, 2));
-        setLabyrinthCell(new WallCell(this, 3, 2));
-        setLabyrinthCell(new WallCell(this, 5, 2));
-
-        setLabyrinthCell(new WallCell(this, 1, 4));
-        setLabyrinthCell(new WallCell(this, 3, 4));
-        setLabyrinthCell(new WallCell(this, 5, 4));
-        setLabyrinthCell(new WallCell(this, 6, 4));
-        setLabyrinthCell(new WallCell(this, 7, 4));
-
-        setLabyrinthCell(new WallCell(this, 7, 1));
+        Maze maze = new Maze((int) Math.ceil((double) getCxCell() / 2), (int) Math.ceil((double) getCyCell() / 2), this);
+        maze.solve();
 
     }
 
@@ -154,7 +145,7 @@ public class LabyrinthView extends View {
 
 
         int height = (int) (screenSize.y * 0.70);
-        int halfOfHeight = height / 2;
+        int halfOfHeight = (int) Math.ceil(height * (double)getCxCell() / (double)getCyCell());
 
         Point answer = new Point();
 
@@ -198,9 +189,9 @@ public class LabyrinthView extends View {
 
     void drawCells(@NonNull Paint paint, @NonNull Canvas canvas)
     {
-        for(int x = 0; x < cxCell; x++)
+        for(int x = 0; x < getCxCell(); x++)
         {
-            for (int y = 0; y < cyCell; y++)
+            for (int y = 0; y < getCyCell(); y++)
             {
                 Point start = toPixelCoordinates(x, y);
                 Rect cellRect = new Rect(start.x, start.y, (int) (start.x + oneCellSize), (int) (start.y + oneCellSize));
