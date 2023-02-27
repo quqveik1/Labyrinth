@@ -15,7 +15,7 @@ import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
 public class FinishCell extends LabyrinthCell
 {
-
+    Bitmap bm;
     Bitmap bmSized;
 
     public FinishCell(LabyrinthView labyrinthView, int x, int y) {

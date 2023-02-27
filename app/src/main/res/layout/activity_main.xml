@@ -62,6 +62,13 @@
             android:layout_below="@id/centralView"
             android:layout_alignStart= "@id/centralView"
             app:direction="down" />
+
+        <Button
+            android:id="@+id/changeLevelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/leftArrow"
+            android:text="Обновить" />
     </RelativeLayout>
 
 

@@ -14,7 +14,7 @@ import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
 public class StartCell extends LabyrinthCell
 {
-
+    Bitmap bm;
     Bitmap bmSized;
 
     public StartCell(LabyrinthView labyrinthView, int x, int y)
@@ -28,6 +28,7 @@ public class StartCell extends LabyrinthCell
             //if(labyrinthView != null) if(labyrinthView.getContext() != null) Toast.makeText(labyrinthView.getContext(), e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     public void onCellSize(@NonNull int newSize)
@@ -46,7 +47,13 @@ public class StartCell extends LabyrinthCell
     @Override
     public void draw(@NonNull Canvas canvas, @NonNull Paint paint, @NonNull Rect rect) {
 
-        canvas.drawBitmap(bmSized, rect.left, rect.top, paint);
+        try
+        {
+            canvas.drawBitmap(bmSized, rect.left, rect.top, paint);
+        }catch (Exception e)
+        {
+            if(labyrinthView != null) if(labyrinthView.getContext() != null) Toast.makeText(labyrinthView.getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        }
 
     }
 

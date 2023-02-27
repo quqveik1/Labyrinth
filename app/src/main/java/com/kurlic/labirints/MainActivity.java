@@ -3,7 +3,9 @@ package com.kurlic.labirints;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 
 import com.kurlic.labirints.view.Arrow.Arrow;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
@@ -15,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     Arrow rightArrow;
     Arrow upArrow;
     Arrow downArrow;
+    Button changeLevelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,5 +33,15 @@ public class MainActivity extends AppCompatActivity {
         upArrow.setLabyrinthView(labyrinthView);
         downArrow = findViewById(R.id.downArrow);
         downArrow.setLabyrinthView(labyrinthView);
+
+        changeLevelButton = findViewById(R.id.changeLevelButton);
+        changeLevelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                labyrinthView.endLevel();
+            }
+        });
+
     }
 }

@@ -16,7 +16,7 @@ import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 public abstract class LabyrinthCell {
     LabyrinthView labyrinthView;
     Point labyrinthPosition;
-    Bitmap bm;
+
 
     LabyrinthCell(@NonNull LabyrinthView labyrinthView, int x, int y)
     {

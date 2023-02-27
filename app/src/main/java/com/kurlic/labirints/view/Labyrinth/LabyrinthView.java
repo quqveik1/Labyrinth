@@ -21,7 +21,6 @@ import com.kurlic.labirints.view.Labyrinth.Cells.EmptyCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.FinishCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.StartCell;
-import com.kurlic.labirints.view.Labyrinth.Cells.TeleportCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.WallCell;
 
 public class LabyrinthView extends View {
@@ -35,6 +34,8 @@ public class LabyrinthView extends View {
     double oneCellSize;
     LabyrinthCell[][] labyrinthCells;
     LabyrinthCell startCell;
+
+    LabyrinthGenerator activeLabyrinth;
 
     private Character character;
 
@@ -65,47 +66,71 @@ public class LabyrinthView extends View {
 
     }
 
-    void cellsConstructor() {
-        labyrinthCells = new LabyrinthCell[getCxCell()][getCyCell()];
+    void cellsConstructor()
+    {
 
-        for (int x = 0; x < getCxCell(); x++)
+        try
         {
-            for (int y = 0; y < getCyCell(); y++)
+            labyrinthCells = new LabyrinthCell[getCxCell()][getCyCell()];
+
+            for (int x = 0; x < getCxCell(); x++)
             {
-                if (false)
-                {
-                    setLabyrinthCell(new WallCell(this, x, y));
-                }
-                else
+                for (int y = 0; y < getCyCell(); y++)
                 {
                     setLabyrinthCell(new EmptyCell(this, x, y));
                 }
             }
-        }
 
-        try
-        {
-            StartCell startCell = new StartCell(this, 0, 0);
-            setLabyrinthCell(startCell);
-            setStartCell(startCell);
+            try
+            {
+                StartCell startCell = new StartCell(this, 0, 0);
+                setLabyrinthCell(startCell);
+                setStartCell(startCell);
 
-            setLevel();
+                generateLevel();
 
-            setLabyrinthCell(new FinishCell(this, getCxCell() - 1, getCyCell() - 1));
+                setLabyrinthCell(new FinishCell(this, getCxCell() - 1, getCyCell() - 1));
+            } catch (Exception e)
+            {
+                //Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
         }
         catch (Exception e)
         {
-            //Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+        if(getOneCellSize() > 0)
+        {
+            for (int x = 0; x < getCxCell(); x++)
+            {
+                for (int y = 0; y < getCyCell(); y++)
+                {
+                    LabyrinthCell cell = getCell(x, y);
+                    if(cell != null)
+                    {
+                        cell.onCellSize((int) getOneCellSize());
+                    }
+                }
+            }
+
         }
 
     }
 
-    private void setLevel()
+    private void generateLevel()
     {
+        setActiveLabyrinth(new LabyrinthGenerator((int) Math.ceil((double) getCxCell() / 2), (int) Math.ceil((double) getCyCell() / 2), this));
+    }
 
-        Maze maze = new Maze((int) Math.ceil((double) getCxCell() / 2), (int) Math.ceil((double) getCyCell() / 2), this);
-        maze.solve();
+    public LabyrinthGenerator getActiveLabyrinth()
+    {
+        return activeLabyrinth;
+    }
 
+    public void setActiveLabyrinth(LabyrinthGenerator activeLabyrinth)
+    {
+        this.activeLabyrinth = activeLabyrinth;
     }
 
     public void setLabyrinthCell(LabyrinthCell labyrinthCell, int x, int y)
@@ -377,6 +402,7 @@ public class LabyrinthView extends View {
     public void endLevel()
     {
         getCharacter().setCoordinates(getStartCell().getLabyrinthPosition());
+        cellsConstructor();
     }
 
     public LabyrinthCell getStartCell()
