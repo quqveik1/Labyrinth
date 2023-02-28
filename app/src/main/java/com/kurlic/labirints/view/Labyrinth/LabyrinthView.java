@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -29,8 +30,8 @@ public class LabyrinthView extends View {
     int strokeWidthDp = 1;
     int strokeWidthPixels;
 
-    int cxCell = 9;
-    int cyCell = 19;
+    int cxCell = 12;
+    int cyCell = 24;
     double oneCellSize;
     LabyrinthCell[][] labyrinthCells;
     LabyrinthCell startCell;
@@ -38,6 +39,8 @@ public class LabyrinthView extends View {
     LabyrinthGenerator activeLabyrinth;
 
     private Character character;
+
+    private boolean solutionShowStatus = false;
 
 
     public LabyrinthView(Context context) {
@@ -68,7 +71,6 @@ public class LabyrinthView extends View {
 
     void cellsConstructor()
     {
-
         try
         {
             labyrinthCells = new LabyrinthCell[getCxCell()][getCyCell()];
@@ -77,7 +79,7 @@ public class LabyrinthView extends View {
             {
                 for (int y = 0; y < getCyCell(); y++)
                 {
-                    setLabyrinthCell(new EmptyCell(this, x, y));
+                    setLabyrinthCell(new LabyrinthCell(this, x, y));
                 }
             }
 
@@ -86,10 +88,11 @@ public class LabyrinthView extends View {
                 StartCell startCell = new StartCell(this, 0, 0);
                 setLabyrinthCell(startCell);
                 setStartCell(startCell);
+                setLabyrinthCell(new FinishCell(this, getCxCell() - 1, getCyCell() - 1));
 
                 generateLevel();
 
-                setLabyrinthCell(new FinishCell(this, getCxCell() - 1, getCyCell() - 1));
+
             } catch (Exception e)
             {
                 //Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
@@ -120,7 +123,8 @@ public class LabyrinthView extends View {
 
     private void generateLevel()
     {
-        setActiveLabyrinth(new LabyrinthGenerator((int) Math.ceil((double) getCxCell() / 2), (int) Math.ceil((double) getCyCell() / 2), this));
+        setActiveLabyrinth(new LabyrinthGenerator(getCxCell(), getCyCell(), this));
+        invalidate();
     }
 
     public LabyrinthGenerator getActiveLabyrinth()
@@ -220,7 +224,14 @@ public class LabyrinthView extends View {
             {
                 Point start = toPixelCoordinates(x, y);
                 Rect cellRect = new Rect(start.x, start.y, (int) (start.x + oneCellSize), (int) (start.y + oneCellSize));
-                labyrinthCells[x][y].draw(canvas, paint, cellRect);
+                try
+                {
+                    getCell(x, y).draw(canvas, paint, cellRect);
+                }
+                catch (Exception e)
+                {
+                    Log.e(String.valueOf(Log.ERROR), e.toString());
+                }
 
             }
         }
@@ -322,7 +333,7 @@ public class LabyrinthView extends View {
 
     public boolean canEnterCell(int x, int y)
     {
-        return labyrinthCells[x][y].canEnter(character);
+        return getCell(x, y).canEnter(character);
     }
 
     public boolean canEnterCell(@NonNull Point point)
@@ -417,5 +428,21 @@ public class LabyrinthView extends View {
 
     public Character getCharacter() {
         return character;
+    }
+
+    public boolean getSolutionShowStatus()
+    {
+        invalidate();
+        return solutionShowStatus;
+    }
+
+    public void changeSolutionShowStatus()
+    {
+        setSolutionShowStatus(!getSolutionShowStatus());
+    }
+
+    public void setSolutionShowStatus(boolean solutionShowStatus)
+    {
+        this.solutionShowStatus = solutionShowStatus;
     }
 }

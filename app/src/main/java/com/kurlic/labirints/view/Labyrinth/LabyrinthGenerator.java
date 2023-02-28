@@ -1,6 +1,7 @@
 package com.kurlic.labirints.view.Labyrinth;
 import androidx.annotation.NonNull;
 
+import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.WallCell;
 
 import java.util.ArrayList;
@@ -27,10 +28,69 @@ public class LabyrinthGenerator
         setLabyrinthView(labyrinthView);
         init();
         generateMaze();
-        fillLabyrinthCells();
+        solve();
+        fillLabyrinthCell();
     }
 
-    void fillLabyrinthCells()
+
+    void fillLabyrinthCell()
+    {
+        for (int x = 0; x < dimensionX; x++)
+        {
+            for (int y = 0; y < dimensionY; y++)
+            {
+                Cell cell = getCell(x, y);
+                LabyrinthCell labyrinthCell = getLabyrinthView().getCell(x, y);
+                setLabyrinthCellsBorders(cell, labyrinthCell);
+                setSolutionPath(cell, labyrinthCell);
+            }
+        }
+    }
+
+    void setSolutionPath(@NonNull Cell cell, @NonNull LabyrinthCell labyrinthCell)
+    {
+        labyrinthCell.setInSolutionPath(cell.inPath);
+    }
+
+
+    void setLabyrinthCellsBorders(@NonNull Cell cell, @NonNull LabyrinthCell labyrinthCell)
+    {
+        if(cell.isCellLeftNeighbor())
+        {
+            if(labyrinthCell != null)
+            {
+                labyrinthCell.setLeftBorder(false);
+            }
+        }
+
+        if(cell.isCellUpNeighbor())
+        {
+            if(labyrinthCell != null)
+            {
+                labyrinthCell.setUpBorder(false);
+            }
+        }
+
+        if(cell.isCellRightNeighbor())
+        {
+            if(labyrinthCell != null)
+            {
+                labyrinthCell.setRightBorder(false);
+            }
+        }
+
+        if(cell.isCellBelowNeighbor())
+        {
+            if(labyrinthCell != null)
+            {
+                labyrinthCell.setDownBorder(false);
+            }
+        }
+    }
+
+
+
+    void fillThickLabyrinthCells()
     {
         for (int x = 0; x < dimensionX; x++)
         {
@@ -122,6 +182,14 @@ public class LabyrinthGenerator
         // used in updateGrid()
         boolean isCellRightNeighbor() {
             return this.neighbors.contains(new Cell(this.x + 1, this.y));
+        }
+
+        boolean isCellUpNeighbor() {
+            return this.neighbors.contains(new Cell(this.x, this.y - 1));
+        }
+        // used in updateGrid()
+        boolean isCellLeftNeighbor() {
+            return this.neighbors.contains(new Cell(this.x - 1, this.y));
         }
         // useful Cell representation
         @Override

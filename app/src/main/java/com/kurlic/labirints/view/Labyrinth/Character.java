@@ -92,13 +92,19 @@ public class Character {
         if(newCoordinates.x - getCoordinates().x != 0)
         {
             int delta = 1;
+            LabyrinthCell.MoveDirection moveDirection = LabyrinthCell.MoveDirection.RIGHT;
             if(newCoordinates.x < getCoordinates().x)
             {
                 delta = -1;
+                moveDirection = LabyrinthCell.MoveDirection.LEFT;
             }
             for(int pos = getCoordinates().x + delta; ; pos += delta)
             {
                 if(!labyrinthView.canEnterCell(pos, getCoordinates().y))
+                {
+                    break;
+                }
+                else if (!labyrinthView.getCell(getCoordinates().x, getCoordinates().y).canMove(moveDirection))
                 {
                     break;
                 }
@@ -118,13 +124,19 @@ public class Character {
         else if(newCoordinates.y - getCoordinates().y != 0)
         {
             int delta = 1;
+            LabyrinthCell.MoveDirection moveDirection = LabyrinthCell.MoveDirection.DOWN;
             if(newCoordinates.y < getCoordinates().y)
             {
                 delta = -1;
+                moveDirection = LabyrinthCell.MoveDirection.UP;
             }
             for(int pos = getCoordinates().y + delta; ; pos += delta)
             {
                 if(!labyrinthView.canEnterCell(getCoordinates().x, pos))
+                {
+                    break;
+                }
+                else if (!labyrinthView.getCell(getCoordinates().x, getCoordinates().y).canMove(moveDirection))
                 {
                     break;
                 }

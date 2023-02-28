@@ -5,5 +5,6 @@
     <color name="wall">#3949AB</color>
     <color name="teleport">#673AB7</color>
     <color name="debugColor">#000000</color>
+    <color name="solution">#9DAC06</color>
 
 </resources>

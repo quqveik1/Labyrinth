@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     Arrow upArrow;
     Arrow downArrow;
     Button changeLevelButton;
+    Button showSolutionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 labyrinthView.endLevel();
+            }
+        });
+
+        showSolutionButton = findViewById(R.id.showSolutionButton);
+
+        showSolutionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                labyrinthView.changeSolutionShowStatus();
             }
         });
 
