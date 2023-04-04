@@ -12,17 +12,16 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.kurlic.labirints.R;
-import com.kurlic.labirints.view.Labyrinth.Cells.EmptyCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.FinishCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.StartCell;
-import com.kurlic.labirints.view.Labyrinth.Cells.WallCell;
 
 public class LabyrinthView extends View {
 
@@ -42,34 +41,37 @@ public class LabyrinthView extends View {
 
     private boolean solutionShowStatus = false;
 
+    TextView timeTextView;
+    TimeThread timeThread;
 
     public LabyrinthView(Context context) {
         super(context);
-        commonConstructor();
+
     }
 
     public LabyrinthView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        commonConstructor();
+
     }
 
     public LabyrinthView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        commonConstructor();
+
     }
 
     public LabyrinthView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        commonConstructor();
+
     }
 
     void commonConstructor() {
+        timeThread = new TimeThread(timeTextView);
+        timeThread.start();
         character = new Character(this);
-        cellsConstructor();
-
+        levelConstructor();
     }
 
-    void cellsConstructor()
+    void levelConstructor()
     {
         try
         {
@@ -112,7 +114,7 @@ public class LabyrinthView extends View {
                     LabyrinthCell cell = getCell(x, y);
                     if(cell != null)
                     {
-                        cell.onCellSize((int) getOneCellSize());
+                        cell.onCellSize((int)getOneCellSize());
                     }
                 }
             }
@@ -121,9 +123,16 @@ public class LabyrinthView extends View {
 
     }
 
+    public void startGame()
+    {
+        commonConstructor();
+    }
+
+
     private void generateLevel()
     {
         setActiveLabyrinth(new LabyrinthGenerator(getCxCell(), getCyCell(), this));
+        timeThread.reset();
         invalidate();
     }
 
@@ -135,6 +144,10 @@ public class LabyrinthView extends View {
     public void setActiveLabyrinth(LabyrinthGenerator activeLabyrinth)
     {
         this.activeLabyrinth = activeLabyrinth;
+    }
+
+    public void setTimeTextView(TextView timeTextView) {
+        this.timeTextView = timeTextView;
     }
 
     public void setLabyrinthCell(LabyrinthCell labyrinthCell, int x, int y)
@@ -413,8 +426,19 @@ public class LabyrinthView extends View {
     public void endLevel()
     {
         getCharacter().setCoordinates(getStartCell().getLabyrinthPosition());
-        cellsConstructor();
+        levelConstructor();
     }
+
+    public void onPause()
+    {
+        timeThread.pause();
+    }
+
+    public void onResume()
+    {
+        timeThread.resumeWork();
+    }
+
 
     public LabyrinthCell getStartCell()
     {
@@ -432,13 +456,13 @@ public class LabyrinthView extends View {
 
     public boolean getSolutionShowStatus()
     {
-        invalidate();
         return solutionShowStatus;
     }
 
     public void changeSolutionShowStatus()
     {
         setSolutionShowStatus(!getSolutionShowStatus());
+        invalidate();
     }
 
     public void setSolutionShowStatus(boolean solutionShowStatus)

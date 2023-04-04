@@ -13,7 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/app_name_russian"
-        android:textSize="15sp"/>
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"/>
 
     <com.kurlic.labirints.view.Labyrinth.LabyrinthView
         android:id="@+id/labyrinthView"

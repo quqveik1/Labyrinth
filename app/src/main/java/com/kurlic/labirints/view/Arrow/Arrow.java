@@ -26,6 +26,9 @@ public class Arrow extends View {
     public static final int DIRECTION_UP = 2;
     public static final int DIRECTION_RIGHT = 3;
     public static final int DIRECTION_DOWN = 4;
+    int oneMoveTimeDelta = 100;
+    Point moveDelta = new Point();
+    TouchThread touchThread;
 
 
     public Arrow(Context context) {
@@ -167,9 +170,7 @@ public class Arrow extends View {
         return triangle;
     }
 
-    int oneMoveTimeDelta = 200;
-    Point moveDelta = new Point();
-    TouchThread touchThread;
+
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event)

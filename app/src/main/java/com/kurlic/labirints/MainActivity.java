@@ -54,5 +54,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        labyrinthView.setTimeTextView(findViewById(R.id.timeTextView));
+
+        labyrinthView.startGame();
+
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        labyrinthView.onPause();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        labyrinthView.onResume();
     }
 }
