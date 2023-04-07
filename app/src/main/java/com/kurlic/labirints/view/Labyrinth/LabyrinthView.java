@@ -227,9 +227,9 @@ public class LabyrinthView extends View {
 
         drawNet(paint, canvas);
 
-        character.setCellSize(getOneCellSize());
+        if(character != null) character.setCellSize(getOneCellSize());
         drawCells(paint, canvas);
-        character.draw(canvas, paint);
+        if(character != null) character.draw(canvas, paint);
 
     }
 
