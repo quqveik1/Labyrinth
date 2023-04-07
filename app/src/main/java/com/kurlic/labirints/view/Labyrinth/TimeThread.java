@@ -2,17 +2,20 @@ package com.kurlic.labirints.view.Labyrinth;
 
 import android.widget.TextView;
 
+import com.kurlic.labirints.MainActivity;
+
 public class TimeThread extends Thread {
     TextView timeTextView;
     int elapsedTime;
     boolean needToWork = true;
     boolean needToPause = false;
-    int oneCircleTime = 100;
+    int oneCircleTime = 10;
+    MainActivity mainActivity;
 
-    TimeThread(TextView timeTextView)
+    TimeThread(MainActivity mainActivity)
     {
         super();
-        this.timeTextView = timeTextView;
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -26,7 +29,7 @@ public class TimeThread extends Thread {
             int minutes = seconds / 60;
             seconds = seconds % 60;
             textTime = String.format("%02d:%02d", minutes, seconds);
-            timeTextView.setText(textTime);
+            mainActivity.updateTimerText(textTime);
             elapsedTime += oneCircleTime;
             try
             {

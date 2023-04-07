@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.kurlic.labirints.view.Arrow.Arrow;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     Arrow downArrow;
     Button changeLevelButton;
     Button showSolutionButton;
+
+    TextView timerTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +57,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        labyrinthView.setTimeTextView(findViewById(R.id.timeTextView));
+        timerTextView = findViewById(R.id.timeTextView);
+        labyrinthView.setTimeTextView(timerTextView);
 
-        labyrinthView.startGame();
+        labyrinthView.startGame(this);
 
     }
+
+    public void updateTimerText(String text)
+    {
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                timerTextView.setText(text);
+            }
+        });
+    }
+
 
     @Override
     protected void onPause()

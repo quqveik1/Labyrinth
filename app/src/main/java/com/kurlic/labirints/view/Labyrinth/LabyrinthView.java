@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.kurlic.labirints.MainActivity;
 import com.kurlic.labirints.R;
 import com.kurlic.labirints.view.Labyrinth.Cells.FinishCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
@@ -44,6 +45,8 @@ public class LabyrinthView extends View {
     TextView timeTextView;
     TimeThread timeThread;
 
+    MainActivity mainActivity;
+
     public LabyrinthView(Context context) {
         super(context);
 
@@ -65,7 +68,7 @@ public class LabyrinthView extends View {
     }
 
     void commonConstructor() {
-        timeThread = new TimeThread(timeTextView);
+        timeThread = new TimeThread(mainActivity);
         timeThread.start();
         character = new Character(this);
         levelConstructor();
@@ -123,8 +126,9 @@ public class LabyrinthView extends View {
 
     }
 
-    public void startGame()
+    public void startGame(MainActivity activity)
     {
+        this.mainActivity = activity;
         commonConstructor();
     }
 
