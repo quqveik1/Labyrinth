@@ -55,6 +55,6 @@ public class FinishCell extends LabyrinthCell
     @Override
     public void onEnter(@NonNull Character character) {
         //Toast.makeText(getLabyrinthView().getContext(), "Вы успешно прошли игру", Toast.LENGTH_SHORT).show();
-        getLabyrinthView().endLevel();
+        getLabyrinthView().finishLevel();
     }
 }

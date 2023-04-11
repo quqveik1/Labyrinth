@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -18,11 +19,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.kurlic.labirints.Fragments.MainGameFragment;
 import com.kurlic.labirints.MainActivity;
 import com.kurlic.labirints.R;
+import com.kurlic.labirints.SharedData;
 import com.kurlic.labirints.view.Labyrinth.Cells.FinishCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.StartCell;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class LabyrinthView extends View {
 
@@ -45,11 +55,11 @@ public class LabyrinthView extends View {
     TextView timeTextView;
     TimeThread timeThread;
 
-    MainActivity mainActivity;
+    MainGameFragment mainActivity;
+
 
     public LabyrinthView(Context context) {
         super(context);
-
     }
 
     public LabyrinthView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -72,6 +82,44 @@ public class LabyrinthView extends View {
         timeThread.start();
         character = new Character(this);
         levelConstructor();
+
+        readUserData();
+
+    }
+
+    String pathToUserData = "userData";
+    void readUserData()
+    {
+        try
+        {
+            FileInputStream fileInputStream = getContext().openFileInput(pathToUserData);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            SharedData.setLabyrinthUserData((LabyrinthUserData) objectInputStream.readObject());
+            objectInputStream.close();
+            fileInputStream.close();
+        }
+        catch (Exception exception)
+        {
+            SharedData.setLabyrinthUserData(new LabyrinthUserData());
+        }
+    }
+
+
+    void saveUserData()
+    {
+        try
+        {
+            FileOutputStream fos = getContext().openFileOutput(pathToUserData, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(SharedData.getLabyrinthUserData());
+            //SharedData.setLabyrinthUserData(null);
+            oos.close();
+            fos.close();
+        }
+        catch (Exception exception)
+        {
+            exception.printStackTrace();
+        }
     }
 
     void levelConstructor()
@@ -126,7 +174,7 @@ public class LabyrinthView extends View {
 
     }
 
-    public void startGame(MainActivity activity)
+    public void startGame(MainGameFragment activity)
     {
         this.mainActivity = activity;
         commonConstructor();
@@ -169,6 +217,24 @@ public class LabyrinthView extends View {
         {
             labyrinthCells[coordinates.x][coordinates.y] = labyrinthCell;
         }
+    }
+
+    @Nullable
+    @Override
+    protected Parcelable onSaveInstanceState()
+    {
+        Parcelable superState = super.onSaveInstanceState();
+        saveUserData();
+
+
+        return superState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state)
+    {
+        super.onRestoreInstanceState(state);
+        readUserData();
     }
 
     @Override
@@ -432,6 +498,14 @@ public class LabyrinthView extends View {
         getCharacter().setCoordinates(getStartCell().getLabyrinthPosition());
         levelConstructor();
     }
+
+    public void finishLevel()
+    {
+        SharedData.getLabyrinthUserData().checkAndSetMinTime(timeThread.getElapsedTime());
+        SharedData.getLabyrinthUserData().newLevelWasFinished();
+        endLevel();
+    }
+
 
     public void onPause()
     {

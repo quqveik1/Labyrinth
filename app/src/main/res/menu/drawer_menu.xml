@@ -2,6 +2,12 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="statItem"
-        android:id="@+id/statItem"/>
+    <item
+        android:id="@+id/mainGameItem"
+        android:title="@string/myGameItem"
+        />
+    <item
+        android:id="@+id/userStatisticItem"
+        android:title="@string/myStatistic"
+        />
 </menu>

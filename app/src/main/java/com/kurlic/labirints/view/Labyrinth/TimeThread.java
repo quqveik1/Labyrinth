@@ -2,17 +2,19 @@ package com.kurlic.labirints.view.Labyrinth;
 
 import android.widget.TextView;
 
+import com.kurlic.labirints.Fragments.MainGameFragment;
 import com.kurlic.labirints.MainActivity;
+import com.kurlic.labirints.SharedData;
 
 public class TimeThread extends Thread {
     TextView timeTextView;
-    int elapsedTime;
+    long elapsedTime;
     boolean needToWork = true;
     boolean needToPause = false;
     int oneCircleTime = 10;
-    MainActivity mainActivity;
+    MainGameFragment mainActivity;
 
-    TimeThread(MainActivity mainActivity)
+    TimeThread(MainGameFragment mainActivity)
     {
         super();
         this.mainActivity = mainActivity;
@@ -24,11 +26,7 @@ public class TimeThread extends Thread {
         super.run();
         while(needToWork)
         {
-            String textTime;
-            int seconds = (int) (elapsedTime / 1000);
-            int minutes = seconds / 60;
-            seconds = seconds % 60;
-            textTime = String.format("%02d:%02d", minutes, seconds);
+            String textTime = SharedData.timeInMSToString(elapsedTime);
             mainActivity.updateTimerText(textTime);
             elapsedTime += oneCircleTime;
             try
@@ -49,4 +47,14 @@ public class TimeThread extends Thread {
     public void pause(){needToPause = true;}
     public void resumeWork(){needToPause = false;}
 
+
+    public long getElapsedTime()
+    {
+        return elapsedTime;
+    }
+
+    public void setElapsedTime(long elapsedTime)
+    {
+        this.elapsedTime = elapsedTime;
+    }
 }
