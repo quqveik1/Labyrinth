@@ -1,5 +1,6 @@
 package com.kurlic.labirints.view.Labyrinth;
 
+import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;

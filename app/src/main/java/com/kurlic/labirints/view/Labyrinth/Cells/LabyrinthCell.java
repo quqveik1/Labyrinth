@@ -94,6 +94,7 @@ public class LabyrinthCell
             paint.setTextSize(20);
             paint.setStrokeWidth(2);
             paint.setTextAlign(Paint.Align.CENTER);
+            paint.setStyle(Paint.Style.FILL);
             paint.setColor(labyrinthView.getResources().getColor(R.color.debugColor));
             int midX = (rect.left + rect.right) / 2;
             int midY = (rect.top + rect.bottom) / 2;

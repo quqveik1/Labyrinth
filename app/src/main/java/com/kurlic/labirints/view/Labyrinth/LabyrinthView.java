@@ -24,8 +24,8 @@ import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.StartCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.WallCell;
 
-public class LabyrinthView extends View {
-
+public class LabyrinthView extends View
+{
     private int w, h;
     int strokeWidthDp = 1;
     int strokeWidthPixels;
