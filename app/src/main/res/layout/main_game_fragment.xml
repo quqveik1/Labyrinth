@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+
+    <com.kurlic.labirints.view.Labyrinth.LabyrinthView
+        android:id="@+id/labyrinthView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/controlCenterLayout">
+
+        <View
+            android:id="@+id/centralView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true" />
+
+        <com.kurlic.labirints.view.Arrow.Arrow
+            android:id="@+id/leftArrow"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:layout_toStartOf="@id/centralView"
+            android:layout_alignTop="@id/centralView"
+            app:direction="left" />
+
+        <com.kurlic.labirints.view.Arrow.Arrow
+            android:id="@+id/rightArrow"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:layout_toEndOf="@id/centralView"
+            android:layout_alignTop="@id/centralView"
+            app:direction="right" />
+
+        <com.kurlic.labirints.view.Arrow.Arrow
+            android:id="@+id/upArrow"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_above="@id/centralView"
+            android:layout_alignStart= "@id/centralView"
+            app:direction="up" />
+
+        <com.kurlic.labirints.view.Arrow.Arrow
+            android:id="@+id/downArrow"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/centralView"
+            android:layout_alignStart= "@id/centralView"
+            app:direction="down" />
+
+        <Button
+            android:id="@+id/changeLevelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/leftArrow"
+            android:text="@string/updateLabyrinth" />
+
+        <Button
+            android:id="@+id/showSolutionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/leftArrow"
+            android:layout_alignParentRight="true"
+            android:text="@string/showSolution" />
+    </RelativeLayout>
+
+</LinearLayout>

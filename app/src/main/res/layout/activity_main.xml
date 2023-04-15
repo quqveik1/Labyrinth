@@ -1,86 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textView"
+    <FrameLayout
+        android:id="@+id/activity_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/app_name_russian"
+                android:textSize="15sp" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/leftMenu"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/app_name_russian"
-        android:textSize="15sp"/>
-
-    <com.kurlic.labirints.view.Labyrinth.LabyrinthView
-        android:id="@+id/labyrinthView"
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"/>
+        android:layout_gravity="start"
+        app:menu="@menu/drawer_menu" />
+</androidx.drawerlayout.widget.DrawerLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/controlCenterLayout">
-
-        <View
-            android:id="@+id/centralView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerInParent="true" />
-
-        <com.kurlic.labirints.view.Arrow.Arrow
-            android:id="@+id/leftArrow"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
-            android:layout_toStartOf="@id/centralView"
-            android:layout_alignTop="@id/centralView"
-            app:direction="left" />
-
-        <com.kurlic.labirints.view.Arrow.Arrow
-            android:id="@+id/rightArrow"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
-            android:layout_toEndOf="@id/centralView"
-            android:layout_alignTop="@id/centralView"
-            app:direction="right" />
-
-        <com.kurlic.labirints.view.Arrow.Arrow
-            android:id="@+id/upArrow"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_above="@id/centralView"
-            android:layout_alignStart= "@id/centralView"
-            app:direction="up" />
-
-        <com.kurlic.labirints.view.Arrow.Arrow
-            android:id="@+id/downArrow"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/centralView"
-            android:layout_alignStart= "@id/centralView"
-            app:direction="down" />
-
-        <Button
-            android:id="@+id/changeLevelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/leftArrow"
-            android:text="@string/updateLabyrinth" />
-
-        <Button
-            android:id="@+id/showSolutionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/leftArrow"
-            android:layout_alignParentRight="true"
-            android:text="@string/showSolution" />
-    </RelativeLayout>
-
-
-
-
-</LinearLayout>

@@ -1,4 +1,7 @@
 package com.kurlic.labirints.view.Labyrinth;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
@@ -9,7 +12,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 
-public class LabyrinthGenerator
+public class LabyrinthGenerator implements Parcelable
 {
     private int dimensionX, dimensionY; // dimension of maze
     private Cell[][] cells; // 2d array of Cells
@@ -31,6 +34,14 @@ public class LabyrinthGenerator
         solve();
         fillLabyrinthCell();
     }
+
+
+    protected LabyrinthGenerator(Parcel in)
+    {
+        dimensionX = in.readInt();
+        dimensionY = in.readInt();
+    }
+
 
 
     void fillLabyrinthCell()
@@ -137,6 +148,34 @@ public class LabyrinthGenerator
         }
     }
 
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags)
+    {
+        dest.writeInt(dimensionX);
+        dest.writeInt(dimensionY);
+    }
+
+    public static final Creator<LabyrinthGenerator> CREATOR = new Creator<LabyrinthGenerator>()
+    {
+        @Override
+        public LabyrinthGenerator createFromParcel(Parcel in)
+        {
+            return new LabyrinthGenerator(in);
+        }
+
+        @Override
+        public LabyrinthGenerator[] newArray(int size)
+        {
+            return new LabyrinthGenerator[size];
+        }
+    };
+
     // inner class to represent a cell
     private class Cell {
         int x, y; // coordinates
@@ -194,7 +233,8 @@ public class LabyrinthGenerator
         // useful Cell representation
         @Override
         public String toString() {
-            return String.format("Cell(%s, %s)", x, y);
+            if(this != null)return String.format("Cell(%s, %s)", x, y);
+            return null;
         }
         // useful Cell equivalence
         @Override
