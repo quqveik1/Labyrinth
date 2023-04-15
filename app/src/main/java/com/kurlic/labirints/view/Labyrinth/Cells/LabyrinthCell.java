@@ -1,12 +1,10 @@
 package com.kurlic.labirints.view.Labyrinth.Cells;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -194,7 +192,7 @@ public class LabyrinthCell
         this.downBorder = downBorder;
     }
 
-    public void onEnter(@NonNull Character character) {};
+    public boolean onEnter(@NonNull Character character) {return true;};
 
     public void onCellSize(int newSize) {};
 

@@ -1,11 +1,12 @@
 package com.kurlic.labirints.view.Labyrinth;
 
-import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,10 +17,11 @@ import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
 public class Character {
 
 
-    Point coordinates;
-    Bitmap bm;
-    Bitmap bmSized;
-    LabyrinthView labyrinthView;
+    private  Point coordinates;
+    private  Point pixelCoordinates;
+    private  Bitmap bm;
+    private  Bitmap bmSized;
+    private  LabyrinthView labyrinthView;
     double cellSize;
 
     double maxRelativeMissClick = 0.3;
@@ -28,6 +30,7 @@ public class Character {
         super();
         this.labyrinthView = labyrinthView;
         coordinates = new Point();
+        pixelCoordinates = new Point();
     }
 
     private void setX(int x)
@@ -93,6 +96,7 @@ public class Character {
             delta = -1;
         }
 
+        boolean needToContinue = true;
         boolean isFirstMove = true;
         for(int pos = getCoordinates().y + delta; ; pos += delta)
         {
@@ -118,10 +122,20 @@ public class Character {
             {
                 newCoordinates.y += delta;
                 isFirstMove = false;
+                needToContinue = labyrinthView.getCell(newCoordinates.x, newCoordinates.y).onEnter(this);
+                if(!needToContinue)
+                {
+                    break;
+                }
             }
         }
-        Toast.makeText(labyrinthView.getContext(), newCoordinates.toString(), Toast.LENGTH_LONG).show();
-        setCoordinates(newCoordinates);
+        if(needToContinue)
+        {
+            Log.d("New cell position before animation", newCoordinates.toString());
+            Point oldCoordinates = new Point(getCoordinates());
+            setCoordinates(newCoordinates, false);
+            animateVerticalWay(oldCoordinates, getCoordinates());
+        }
     }
 
     private void horizontalMove(LabyrinthCell.MoveDirection moveDirection)
@@ -134,6 +148,7 @@ public class Character {
             delta = -1;
         }
 
+        boolean needToContinue = true;
         boolean isFirstMove = true;
         for(int pos = getCoordinates().x + delta; ; pos += delta)
         {
@@ -159,10 +174,92 @@ public class Character {
             {
                 newCoordinates.x += delta;
                 isFirstMove = false;
+                needToContinue = labyrinthView.getCell(newCoordinates.x, newCoordinates.y).onEnter(this);
+                if(!needToContinue) break;
             }
         }
-        Toast.makeText(labyrinthView.getContext(), newCoordinates.toString(), Toast.LENGTH_LONG).show();
-        setCoordinates(newCoordinates);
+        if(needToContinue)
+        {
+            Log.d("New cell position before animation", newCoordinates.toString());
+            Point oldCoordinates = new Point(getCoordinates());
+            setCoordinates(newCoordinates, false);
+            if (needToContinue) animateHorizontalWay(oldCoordinates, getCoordinates());
+        }
+    }
+
+    ValueAnimator wayAnimator;
+    private final long animatorDuration = 70;
+    private void animateHorizontalWay(@NonNull Point start, @NonNull Point finish)
+    {
+        int cellDelta = finish.x - start.x;
+        Point pixelStart = labyrinthView.toPixelCoordinates(start);
+        Point pixelFinish = labyrinthView.toPixelCoordinates(finish);
+        float pixelDelta = pixelFinish.x - pixelStart.x;
+
+        setYPixelCoordinates(pixelFinish.y);
+
+        wayAnimator = ValueAnimator.ofFloat(0, 1);
+        wayAnimator.setDuration(animatorDuration * Math.abs(cellDelta));
+        Character character = this;
+
+        float oneCellSize = (float) labyrinthView.getOneCellSize();
+        wayAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            float lastOnEnterCellCalled = 0;
+
+            @Override
+            public void onAnimationUpdate(@NonNull ValueAnimator animation)
+            {
+                float progress = (float) animation.getAnimatedValue();
+                float relativePixelDelta = progress * pixelDelta;
+                float newX = pixelStart.x + relativePixelDelta;
+                setXPixelCoordinates((int)newX);
+                Log.d("onAnimationUpdate", "newX:" + newX + " progress" + progress + " pixelDelta" + pixelDelta + " cell" + getCoordinates() + " start" + start);
+
+                /*
+                float currCell = relativePixelDelta / oneCellSize;
+                if(Math.abs(currCell) > Math.abs(lastOnEnterCellCalled))
+                {
+                    labyrinthView.getCell((int) (start.x + lastOnEnterCellCalled + 1), getCoordinates().y).onEnter(character);
+                    lastOnEnterCellCalled = currCell;
+                }
+
+                 */
+            }
+        });
+
+        wayAnimator.start();
+
+    }
+    private void animateVerticalWay(@NonNull Point start, @NonNull Point finish)
+    {
+        int cellDelta = finish.y - start.y;
+        Point pixelStart = labyrinthView.toPixelCoordinates(start);
+        Point pixelFinish = labyrinthView.toPixelCoordinates(finish);
+        float pixelDelta = pixelFinish.y - pixelStart.y;
+
+        setXPixelCoordinates(pixelFinish.x);
+
+        wayAnimator = ValueAnimator.ofFloat(0, 1);
+        wayAnimator.setDuration(animatorDuration * Math.abs(cellDelta));
+
+        Character character = this;
+
+        float oneCellSize = (float) labyrinthView.getOneCellSize();
+        wayAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            float lastOnEnterCellCalled = 0;
+            @Override
+            public void onAnimationUpdate(@NonNull ValueAnimator animation)
+            {
+                float progress = (float) animation.getAnimatedValue();
+                float relativePixelDelta = progress * pixelDelta;
+                float newY = pixelStart.y + relativePixelDelta;
+                setYPixelCoordinates((int)newY);
+                Log.d("onAnimationUpdate", "newY:" + newY + " progress" + progress + " pixelDelta" + pixelDelta + " cell" + getCoordinates() + " start" + start);
+            }
+        });
+
+        wayAnimator.start();
+
     }
 
     public boolean isCoordinatesSuitable(@NonNull Point newCoordinates)
@@ -184,9 +281,47 @@ public class Character {
     public void setCoordinates(Point coordinates) {
         if(isCoordinatesSuitable(coordinates)) {
             this.coordinates = coordinates;
-            labyrinthView.invalidate();
+            if(wayAnimator != null)
+            {
+                if(wayAnimator.isRunning())
+                {
+                    wayAnimator.cancel();
+                }
+            }
+            setPixelCoordinates(labyrinthView.toPixelCoordinates(coordinates));
         }
     }
+    private void setCoordinates(Point coordinates, boolean needToRefreshPixel) {
+        if(isCoordinatesSuitable(coordinates)) {
+            this.coordinates = coordinates;
+            if(needToRefreshPixel) setPixelCoordinates(labyrinthView.toPixelCoordinates(coordinates));
+        }
+    }
+
+    public Point getPixelCoordinates()
+    {
+        return pixelCoordinates;
+    }
+
+    public void setPixelCoordinates(Point pixelCoordinates)
+    {
+        this.pixelCoordinates = pixelCoordinates;
+        labyrinthView.invalidate();
+    }
+
+    public void setXPixelCoordinates(int x)
+    {
+        this.pixelCoordinates.x = x;
+        labyrinthView.invalidate();
+    }
+    public void setYPixelCoordinates(int y)
+    {
+        this.pixelCoordinates.y = y;
+        labyrinthView.invalidate();
+    }
+
+
+
 
     void startMoving(@NonNull Point newCoordinates)
     {
@@ -336,8 +471,9 @@ public class Character {
     {
         try
         {
-            Point pixelsCoordinates = labyrinthView.toPixelCoordinates(coordinates);
-            canvas.drawBitmap(bmSized, pixelsCoordinates.x, pixelsCoordinates.y, paint);
+            //Point pixelsCoordinates = labyrinthView.toPixelCoordinates(coordinates);
+            canvas.drawBitmap(bmSized, pixelCoordinates.x, pixelCoordinates.y, paint);
+            Log.d("pixelCoordinates", pixelCoordinates.toString());
         }
         catch (Exception e)
         {

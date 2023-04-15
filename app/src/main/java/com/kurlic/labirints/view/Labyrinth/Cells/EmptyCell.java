@@ -33,7 +33,8 @@ public class EmptyCell extends LabyrinthCell
     }
 
     @Override
-    public void onEnter(Character character) {
+    public boolean onEnter(Character character) {
+        return true;//need to continue after entering
 
     }
 }

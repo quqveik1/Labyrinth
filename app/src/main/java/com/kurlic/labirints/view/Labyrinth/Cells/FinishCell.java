@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -53,8 +52,9 @@ public class FinishCell extends LabyrinthCell
     }
 
     @Override
-    public void onEnter(@NonNull Character character) {
+    public boolean onEnter(@NonNull Character character) {
         //Toast.makeText(getLabyrinthView().getContext(), "Вы успешно прошли игру", Toast.LENGTH_SHORT).show();
         getLabyrinthView().finishLevel();
+        return false;
     }
 }

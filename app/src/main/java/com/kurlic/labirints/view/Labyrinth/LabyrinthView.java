@@ -93,6 +93,7 @@ public class LabyrinthView extends View
         levelConstructor();
 
         readUserData();
+        //endLevel();
 
     }
 
@@ -153,9 +154,8 @@ public class LabyrinthView extends View
                 setLabyrinthCell(new FinishCell(this, getCxCell() - 1, getCyCell() - 1));
 
                 generateLevel();
-
-
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 //Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
             }

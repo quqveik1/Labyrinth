@@ -42,8 +42,10 @@ public class TeleportCell extends LabyrinthCell
     }
 
     @Override
-    public void onEnter(@NonNull Character character) {
+    public boolean onEnter(@NonNull Character character)
+    {
         character.setCoordinates(teleportDest);
+        return true;
     }
 
 

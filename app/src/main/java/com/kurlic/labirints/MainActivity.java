@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
+import com.kurlic.labirints.Fragments.HowToPlayFragment;
 import com.kurlic.labirints.Fragments.MainGameFragment;
 import com.kurlic.labirints.Fragments.UserStatisticFragment;
 import com.kurlic.labirints.view.Arrow.Arrow;
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private MainGameFragment mainGameFragment;
     private UserStatisticFragment userStatisticFragment;
+
+    private HowToPlayFragment howToPlayFragment;
     private LabyrinthView labyrinthView;
 
 
@@ -112,10 +115,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             searchFragmentAndAdd(R.id.fragmentContainer, userStatisticFragment.uniqueTag, userStatisticFragment, fragmentManager, fragmentTransaction);
-
-
-
         }
+        if (id == R.id.howToPlayItem)
+        {
+            if(howToPlayFragment == null)
+            {
+                howToPlayFragment = new HowToPlayFragment();
+            }
+
+            searchFragmentAndAdd(R.id.fragmentContainer, howToPlayFragment.uniqueTag, howToPlayFragment, fragmentManager, fragmentTransaction);
+        }
+
         if (id == R.id.mainGameItem)
         {
             if(mainGameFragment == null)

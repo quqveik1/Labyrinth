@@ -40,8 +40,4 @@ public class WallCell extends LabyrinthCell
         return false;
     }
 
-    @Override
-    public void onEnter(@NonNull Character character) {
-
-    }
 }

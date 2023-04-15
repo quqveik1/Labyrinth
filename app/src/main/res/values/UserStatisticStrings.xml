@@ -3,4 +3,5 @@
     <string name="myStatistic">Моя статистика</string>
     <string name="cFinishedLevels">Количество пройденных уровней: </string>
     <string name="fastestGamePass">Самое быстрое прохождение: </string>
+    <string name="name">Имя: </string>
 </resources>
