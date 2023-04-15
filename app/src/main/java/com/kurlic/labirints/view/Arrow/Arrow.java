@@ -177,19 +177,33 @@ public class Arrow extends View {
     {
         if(event.getAction() == MotionEvent.ACTION_DOWN)
         {
-            touchThread = new TouchThread(oneMoveTimeDelta, moveDelta);
-            touchThread.setLabyrinthView(labyrinthView);
-            touchThread.start();
+            if(direction == DIRECTION_LEFT)
+            {
+                labyrinthView.getCharacter().moveLeft();
+            }
+            if(direction == DIRECTION_RIGHT)
+            {
+                labyrinthView.getCharacter().moveRight();
+            }
+            if(direction == DIRECTION_UP)
+            {
+                labyrinthView.getCharacter().moveUp();
+            }
+            if(direction == DIRECTION_DOWN)
+            {
+                labyrinthView.getCharacter().moveDown();
+            }
+
         }
 
         if(event.getAction() == MotionEvent.ACTION_UP)
         {
-            touchThread.setNeedToRun(false);
+            //touchThread.setNeedToRun(false);
         }
 
         if(event.getAction() == MotionEvent.ACTION_OUTSIDE)
         {
-            touchThread.setNeedToRun(false);
+            //touchThread.setNeedToRun(false);
         }
         return true;
     }

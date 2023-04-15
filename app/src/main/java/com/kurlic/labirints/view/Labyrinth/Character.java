@@ -64,6 +64,107 @@ public class Character {
         moveTo(newCoordinates);
     }
 
+    public void moveUp()
+    {
+        verticalMove(LabyrinthCell.MoveDirection.UP);
+    }
+    public void moveDown()
+    {
+        verticalMove(LabyrinthCell.MoveDirection.DOWN);
+    }
+
+    public void moveLeft()
+    {
+        horizontalMove(LabyrinthCell.MoveDirection.LEFT);
+    }
+
+    public void moveRight()
+    {
+        horizontalMove(LabyrinthCell.MoveDirection.RIGHT);
+    }
+
+    private void verticalMove(LabyrinthCell.MoveDirection moveDirection)
+    {
+        int delta = 1;
+        Point newCoordinates = new Point(getCoordinates());
+
+        if(moveDirection == LabyrinthCell.MoveDirection.UP)
+        {
+            delta = -1;
+        }
+
+        boolean isFirstMove = true;
+        for(int pos = getCoordinates().y + delta; ; pos += delta)
+        {
+            if(pos < 0 || pos >= labyrinthView.getCyCell())
+            {
+                break;
+            }
+            else if(!labyrinthView.canEnterCell(newCoordinates.x, pos))
+            {
+                break;
+            }
+            else if (!labyrinthView.getCell(newCoordinates.x, newCoordinates.y).canMove(moveDirection))
+            {
+                break;
+            }
+            else if((labyrinthView.getCell(newCoordinates.x, newCoordinates.y).canMove(LabyrinthCell.MoveDirection.LEFT) ||
+                    labyrinthView.getCell(newCoordinates.x, newCoordinates.y).canMove(LabyrinthCell.MoveDirection.RIGHT))
+                    && !isFirstMove)
+            {
+                break;
+            }
+            else
+            {
+                newCoordinates.y += delta;
+                isFirstMove = false;
+            }
+        }
+        Toast.makeText(labyrinthView.getContext(), newCoordinates.toString(), Toast.LENGTH_LONG).show();
+        setCoordinates(newCoordinates);
+    }
+
+    private void horizontalMove(LabyrinthCell.MoveDirection moveDirection)
+    {
+        int delta = 1;
+        Point newCoordinates = new Point(getCoordinates());
+
+        if(moveDirection == LabyrinthCell.MoveDirection.LEFT)
+        {
+            delta = -1;
+        }
+
+        boolean isFirstMove = true;
+        for(int pos = getCoordinates().x + delta; ; pos += delta)
+        {
+            if(pos < 0 || pos >= labyrinthView.getCxCell())
+            {
+                break;
+            }
+            else if(!labyrinthView.canEnterCell(pos, newCoordinates.y))
+            {
+                break;
+            }
+            else if (!labyrinthView.getCell(newCoordinates.x, newCoordinates.y).canMove(moveDirection))
+            {
+                break;
+            }
+            else if((labyrinthView.getCell(newCoordinates.x, newCoordinates.y).canMove(LabyrinthCell.MoveDirection.UP) ||
+                    labyrinthView.getCell(newCoordinates.x, newCoordinates.y).canMove(LabyrinthCell.MoveDirection.DOWN))
+                    && !isFirstMove)
+            {
+                break;
+            }
+            else
+            {
+                newCoordinates.x += delta;
+                isFirstMove = false;
+            }
+        }
+        Toast.makeText(labyrinthView.getContext(), newCoordinates.toString(), Toast.LENGTH_LONG).show();
+        setCoordinates(newCoordinates);
+    }
+
     public boolean isCoordinatesSuitable(@NonNull Point newCoordinates)
     {
         if(newCoordinates.x < labyrinthView.getCxCell() && newCoordinates.y < labyrinthView.getCyCell())
@@ -233,7 +334,8 @@ public class Character {
 
     public void draw(Canvas canvas, Paint paint)
     {
-        try {
+        try
+        {
             Point pixelsCoordinates = labyrinthView.toPixelCoordinates(coordinates);
             canvas.drawBitmap(bmSized, pixelsCoordinates.x, pixelsCoordinates.y, paint);
         }

@@ -1,5 +1,7 @@
 package com.kurlic.labirints;
 
+import androidx.annotation.NonNull;
+
 import com.kurlic.labirints.view.Labyrinth.LabyrinthUserData;
 
 public class SharedData
@@ -16,6 +18,7 @@ public class SharedData
         SharedData.labyrinthUserData = labyrinthUserData;
     }
 
+    @NonNull
     public static String timeInMSToString(long time)
     {
         String textTime = "";

@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -57,24 +58,32 @@ public class LabyrinthView extends View
 
     MainGameFragment mainActivity;
 
+    GestureDetector swipeDetector;
 
     public LabyrinthView(Context context) {
         super(context);
+        realConstructor(context);
+
     }
 
     public LabyrinthView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
+        realConstructor(context);
     }
 
     public LabyrinthView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-
+        realConstructor(context);
     }
 
     public LabyrinthView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        realConstructor(context);
+    }
 
+    void realConstructor(Context context)
+    {
+        swipeDetector = new GestureDetector(context, new LabyrinthSwipeDetector(this));
     }
 
     void commonConstructor() {
@@ -358,24 +367,7 @@ public class LabyrinthView extends View
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event)
     {
-
-        if(event.getAction() == MotionEvent.ACTION_UP) {
-            int x = (int) event.getX();
-            int y = (int) event.getY();
-            if(x >= 0 && y >= 0) {
-                if (x <= getWidth() && y <= getHeight()) {
-
-
-                    Point cell = toCellCoordinates(x, y);
-
-                    //Toast.makeText(getContext(), "x: " + cell.x + " y: " + cell.y, Toast.LENGTH_SHORT).show();
-                    character.moveTo(cell);
-                }
-            }
-        }
-
-        return true;
-
+        return swipeDetector.onTouchEvent(event) || super.onTouchEvent(event);
     }
 
     @Override
