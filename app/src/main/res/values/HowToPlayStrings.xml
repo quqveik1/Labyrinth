@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="howToPlay">Как играть?</string>
+    <string name="howToPlayFullInstruction"><br>
+        </br>1. Ваша задача пройти лабиринт от начала до конца\n<br>
+        </br>2. Управлять персонажем можно с помощью стрелочек внизу или при помощи свайпов по лабиринту\n<br>
+        </br>3. Статистику прохождений можно посмотреть в меню Моя статистика</string>
+</resources>

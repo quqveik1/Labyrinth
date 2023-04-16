@@ -48,7 +48,7 @@ public class LabyrinthCell
         {
             drawSolution(canvas, paint, rect);
             drawBorders(canvas, paint, rect);
-            drawCellPos(canvas, paint, rect);
+            //drawCellPos(canvas, paint, rect);
         }
         catch (Exception e)
         {

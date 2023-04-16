@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Labyrinths</string>
-    <string name="app_name_russian">Занимательные лабиринты</string>
+    <string name="app_name_russian">Лабиринты</string>
     <string name="updateLabyrinth">Обновить</string>
     <string name="showSolution">Решение</string>
     <string name="myGameItem">Моя игра</string>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="labyrinthBackground">#D81B60</color>
-    <color name="labyrinthNet">#43A047</color>
-    <color name="wall">#3949AB</color>
+    <color name="labyrinthBackground">#464646</color>
+    <color name="labyrinthNet">#8C8C8C</color>
+    <color name="wall">#CC4E5C</color>
     <color name="teleport">#673AB7</color>
     <color name="debugColor">#000000</color>
     <color name="solution">#9DAC06</color>
