@@ -3,7 +3,7 @@ package com.kurlic.labirints.view.Arrow;
 import android.graphics.Point;
 import android.widget.Toast;
 
-import com.kurlic.labirints.view.Labyrinth.Character;
+import com.kurlic.labirints.view.Labyrinth.Character.Character;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
 public class TouchThread extends Thread{

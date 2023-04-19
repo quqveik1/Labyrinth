@@ -7,7 +7,7 @@ import android.graphics.Rect;
 
 import androidx.annotation.NonNull;
 
-import com.kurlic.labirints.view.Labyrinth.Character;
+import com.kurlic.labirints.view.Labyrinth.Character.Character;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
 public class EmptyCell extends LabyrinthCell

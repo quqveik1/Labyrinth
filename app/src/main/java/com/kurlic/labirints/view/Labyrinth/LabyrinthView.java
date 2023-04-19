@@ -1,6 +1,7 @@
 package com.kurlic.labirints.view.Labyrinth;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -20,20 +21,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
 import com.kurlic.labirints.Fragments.MainGameFragment;
-import com.kurlic.labirints.MainActivity;
 import com.kurlic.labirints.R;
 import com.kurlic.labirints.SharedData;
 import com.kurlic.labirints.view.Labyrinth.Cells.FinishCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.StartCell;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import com.kurlic.labirints.view.Labyrinth.Character.Character;
 
 public class LabyrinthView extends View
 {
@@ -98,17 +93,19 @@ public class LabyrinthView extends View
     }
 
     String pathToUserData = "userData";
+    String userDataKey = "userDataKey";
     void readUserData()
     {
-        try
-        {
-            FileInputStream fileInputStream = getContext().openFileInput(pathToUserData);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            SharedData.setLabyrinthUserData((LabyrinthUserData) objectInputStream.readObject());
-            objectInputStream.close();
-            fileInputStream.close();
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(pathToUserData, Context.MODE_PRIVATE);
+        String json = sharedPreferences.getString(userDataKey, null);
+
+        if (json != null) {
+            Gson gson = new Gson();
+            LabyrinthUserData labyrinthUserData = gson.fromJson(json, LabyrinthUserData.class);
+            SharedData.setLabyrinthUserData(labyrinthUserData);
         }
-        catch (Exception exception)
+        else
         {
             SharedData.setLabyrinthUserData(new LabyrinthUserData());
         }
@@ -119,12 +116,13 @@ public class LabyrinthView extends View
     {
         try
         {
-            FileOutputStream fos = getContext().openFileOutput(pathToUserData, Context.MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(SharedData.getLabyrinthUserData());
-            //SharedData.setLabyrinthUserData(null);
-            oos.close();
-            fos.close();
+            Gson gson = new Gson();
+            String json = gson.toJson(SharedData.getLabyrinthUserData());
+
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(pathToUserData, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(userDataKey, json);
+            editor.apply();
         }
         catch (Exception exception)
         {
@@ -286,25 +284,26 @@ public class LabyrinthView extends View
         return answer;
     }
 
-
+    Paint mainPaint = new Paint();
+    Rect mainRect = new Rect();
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Paint paint = new Paint();
-        paint.setColor(getResources().getColor(R.color.labyrinthBackground));
-        paint.setStyle(Paint.Style.FILL);
+
+        mainPaint.setColor(getResources().getColor(R.color.labyrinthBackground));
+        mainPaint.setStyle(Paint.Style.FILL);
         w = getWidth();
         h = getHeight();
+        mainRect.set(0, 0, w, h);
 
-        Rect rect = new Rect(0, 0, w, h);
-        canvas.drawRect(rect, paint);
+        canvas.drawRect(mainRect, mainPaint);
 
-        drawNet(paint, canvas);
+        drawNet(mainPaint, canvas);
 
         if(character != null) character.setCellSize(getOneCellSize());
-        drawCells(paint, canvas);
-        if(character != null) character.draw(canvas, paint);
+        drawCells(mainPaint, canvas);
+        if(character != null) character.draw(canvas, mainPaint);
 
     }
 
@@ -404,6 +403,10 @@ public class LabyrinthView extends View
     public LabyrinthCell getCell(int x, int y)
     {
         return labyrinthCells[x][y];
+    }
+    public LabyrinthCell getCell(@NonNull Point point)
+    {
+        return labyrinthCells[point.x][point.y];
     }
 
     public boolean canEnterCell(int x, int y)

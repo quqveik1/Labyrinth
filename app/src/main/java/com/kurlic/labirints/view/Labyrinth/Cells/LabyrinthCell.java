@@ -9,7 +9,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.kurlic.labirints.R;
-import com.kurlic.labirints.view.Labyrinth.Character;
+import com.kurlic.labirints.view.Labyrinth.Character.Character;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
 public class LabyrinthCell
