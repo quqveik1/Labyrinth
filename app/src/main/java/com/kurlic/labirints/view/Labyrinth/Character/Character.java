@@ -1,8 +1,5 @@
 package com.kurlic.labirints.view.Labyrinth.Character;
 
-import android.animation.Animator;
-import android.animation.FloatEvaluator;
-import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,15 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.kurlic.labirints.R;
 import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Semaphore;
 
 public class Character {
 
@@ -144,129 +139,8 @@ public class Character {
         }
     }
 
-    private boolean isAnimationActive = false;
-
-    private boolean isAnimationActive()
-    {
-        return isAnimationActive;
-    }
-
-    private void setAnimationActive(boolean animationActive)
-    {
-        isAnimationActive = animationActive;
-    }
-
-    class MoveThread extends Thread
-    {
-        private LabyrinthCell.MoveDirection moveDirection;
-
-        public LabyrinthCell.MoveDirection getMoveDirection()
-        {
-            return moveDirection;
-        }
-
-        public void setMoveDirection(LabyrinthCell.MoveDirection moveDirection)
-        {
-            this.moveDirection = moveDirection;
-        }
-
-        private boolean workStatus;
-
-        public boolean getWorkStatus()
-        {
-            return workStatus;
-        }
-
-        public void setWorkStatus(boolean workStatus)
-        {
-            this.workStatus = workStatus;
-            if(workStatus == false)
-            {
-                if(wayAnimator != null)
-                {
-                    if(wayAnimator.isRunning())
-                    {
-                        wayAnimator.end();
-                    }
-                }
-            }
-        }
-
-
-        @Override
-        public void run()
-        {
-            super.run();
-            setWorkStatus(true);
-            int delta = 1;
-            Point newCoordinates = new Point(getCoordinates());
-
-            if(moveDirection == LabyrinthCell.MoveDirection.LEFT)
-            {
-                delta = -1;
-            }
-
-            boolean isFirstMove = true;
-            while(getWorkStatus())
-            {
-                newCoordinates.x += delta;
-                if(newCoordinates.x < 0 || newCoordinates.x >= labyrinthView.getCxCell())
-                {
-                    break;
-                }
-                else if(!labyrinthView.canEnterCell(newCoordinates.x, newCoordinates.y))
-                {
-                    break;
-                }
-                else if (!labyrinthView.getCell(getCoordinates()).canMove(moveDirection))
-                {
-                    break;
-                }
-                else if((labyrinthView.getCell(newCoordinates.x, newCoordinates.y).canMove(LabyrinthCell.MoveDirection.UP) ||
-                        labyrinthView.getCell(newCoordinates.x, newCoordinates.y).canMove(LabyrinthCell.MoveDirection.DOWN))
-                        && !isFirstMove)
-                {
-                    break;
-                }
-                else
-                {
-                    newCoordinates.x += delta;
-                    isFirstMove = false;
-                    labyrinthView.getCell(newCoordinates.x, newCoordinates.y).onEnter(character);
-                    animateHorizontalWay(getCoordinates(), newCoordinates);
-                    while (wayAnimator.isRunning())
-                    {
-                        try
-                        {
-                            sleep(5);
-                        } catch (InterruptedException e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
-            }
-        }
-    }
-
-    Character character = this;
-
-    MoveThread activeMoveThread;
-    MoveAnimator moveAnimator;
     private void horizontalMove(LabyrinthCell.MoveDirection moveDirection)
     {
-        if(moveAnimator != null)
-        {
-            if(moveAnimator.isRunning())
-            {
-                moveAnimator.softStop();
-            }
-        }
-        moveAnimator = new MoveAnimator(moveDirection);
-        moveAnimator.start();
-
-        /*
         int delta = 1;
         Point newCoordinates = new Point(getCoordinates());
 
@@ -312,154 +186,6 @@ public class Character {
             setCoordinates(newCoordinates, false);
             if (needToContinue) animateHorizontalWay(oldCoordinates, getCoordinates());
         }
-
-         */
-    }
-    class MoveAnimator extends ValueAnimator
-    {
-        LabyrinthCell.MoveDirection moveDirection;
-        Point newCoordinates;
-        Point oldCoordinates;
-        int delta = 1;
-        boolean isFirstMove = true;
-
-        public LabyrinthCell.MoveDirection getMoveDirection()
-        {
-            return moveDirection;
-        }
-
-        public void setMoveDirection(LabyrinthCell.MoveDirection moveDirection)
-        {
-            this.moveDirection = moveDirection;
-            if(moveDirection == LabyrinthCell.MoveDirection.LEFT)
-            {
-                delta = -1;
-            }
-        }
-
-        public void softStop()
-        {
-            //setRepeatCount(0);
-            int currentRepeatCount = (int) (getCurrentPlayTime() / animatorDuration); // вычисляем текущее количество повторений
-            setRepeatCount(currentRepeatCount);
-            setNeedToDoNewAnimation(false);
-        }
-
-        MoveAnimator(LabyrinthCell.MoveDirection moveDirection)
-        {
-            super();
-            setMoveDirection(moveDirection);
-            setDuration(animatorDuration);
-            setFloatValues(0, 1);
-            setEvaluator(new FloatEvaluator());
-            newCoordinates = new Point(getCoordinates());
-            oldCoordinates = new Point(getCoordinates());
-            setRepeatCount(INFINITE);
-            addUpdateListener(new MoveUpdateListener());
-            addListener(new MoveAnimationListener());
-        }
-        class MoveAnimationListener implements Animator.AnimatorListener
-        {
-            @Override
-            public void onAnimationStart(@NonNull Animator animation)
-            {
-                controlAnimation();
-            }
-
-            @Override
-            public void onAnimationEnd(@NonNull Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationCancel(@NonNull Animator animation)
-            {
-                Log.d("MoveAnimation", "Animation canceled");
-            }
-
-            @Override
-            public void onAnimationRepeat(@NonNull Animator animation)
-            {
-                controlAnimation();
-            }
-
-            void controlAnimation()
-            {
-                oldCoordinates = new Point(getCoordinates());
-                newCoordinates.x += delta;
-                if(newCoordinates.x < 0 || newCoordinates.x >= labyrinthView.getCxCell())
-                {
-                    softStop();
-                }
-                else if(!labyrinthView.canEnterCell(newCoordinates.x, newCoordinates.y))
-                {
-                    softStop();
-                }
-                else if (!labyrinthView.getCell(getCoordinates()).canMove(moveDirection))
-                {
-                    softStop();
-                }
-                else if((labyrinthView.getCell(getCoordinates()).canMove(LabyrinthCell.MoveDirection.UP) ||
-                        labyrinthView.getCell(getCoordinates()).canMove(LabyrinthCell.MoveDirection.DOWN))
-                        && !isFirstMove)
-                {
-                    softStop();
-                }
-                else
-                {
-                    isFirstMove = false;
-                    labyrinthView.getCell(newCoordinates).onEnter(character);
-                    setCoordinates(newCoordinates);
-                    setNeedToDoNewAnimation(true);
-                    computePixelPosForAnimation();
-                }
-            }
-        }
-
-
-        void computePixelPosForAnimation()
-        {
-            pixelAnimationStart = labyrinthView.toPixelCoordinates(oldCoordinates);
-            pixelAnimationFinish = labyrinthView.toPixelCoordinates(newCoordinates);
-            pixelDelta = pixelAnimationFinish.x - pixelAnimationStart.x;
-        }
-
-        Point pixelAnimationStart = new Point();
-        Point pixelAnimationFinish = new Point();
-        float pixelDelta;
-
-        private boolean needToDoNewAnimation = true;
-
-        public boolean isNeedToDoNewAnimation()
-        {
-            return needToDoNewAnimation;
-        }
-
-        public void setNeedToDoNewAnimation(boolean needToDoNewAnimation)
-        {
-            this.needToDoNewAnimation = needToDoNewAnimation;
-        }
-
-        class MoveUpdateListener implements AnimatorUpdateListener
-        {
-            @Override
-            public void onAnimationUpdate(@NonNull ValueAnimator animation)
-            {
-                float progress = (float) animation.getAnimatedValue();
-                if(progress < 0.3)
-                {
-                    if(!isNeedToDoNewAnimation())
-                    {
-                        return;
-                    }
-                }
-                float relativePixelDelta = progress * pixelDelta;
-                float newX = pixelAnimationStart.x + relativePixelDelta;
-                setXPixelCoordinates((int) newX);
-                Log.d("MoveAnimationPixelPos", "pos" + newX + " progress:" + progress + " pixelAnimationStart.x: " + pixelAnimationStart.x + " pixelAnimationFinish.x:" + pixelAnimationFinish.x);
-            }
-        }
     }
 
     ValueAnimator wayAnimator;
@@ -475,7 +201,6 @@ public class Character {
 
         wayAnimator = ValueAnimator.ofFloat(0, 1);
         wayAnimator.setDuration(animatorDuration * Math.abs(cellDelta));
-        wayAnimator.setRepeatCount(ValueAnimator.INFINITE);
         Character character = this;
 
         float oneCellSize = (float) labyrinthView.getOneCellSize();
@@ -490,35 +215,16 @@ public class Character {
                 float newX = pixelStart.x + relativePixelDelta;
                 setXPixelCoordinates((int)newX);
                 Log.d("onAnimationUpdate", "newX:" + newX + " progress" + progress + " pixelDelta" + pixelDelta + " cell" + getCoordinates() + " start" + start);
-            }
-        });
 
-        wayAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(@NonNull Animator animation)
-            {
-                setAnimationActive(true);
+                /*
+                float currCell = relativePixelDelta / oneCellSize;
+                if(Math.abs(currCell) > Math.abs(lastOnEnterCellCalled))
+                {
+                    labyrinthView.getCell((int) (start.x + lastOnEnterCellCalled + 1), getCoordinates().y).onEnter(character);
+                    lastOnEnterCellCalled = currCell;
+                }
 
-            }
-
-            @Override
-            public void onAnimationEnd(@NonNull Animator animation)
-            {
-                setAnimationActive(false);
-
-            }
-
-            @Override
-            public void onAnimationCancel(@NonNull Animator animation)
-            {
-                setAnimationActive(false);
-            }
-
-            @Override
-            public void onAnimationRepeat(@NonNull Animator animation)
-            {
-
+                 */
             }
         });
 
@@ -575,8 +281,7 @@ public class Character {
 
     public void setCoordinates(Point coordinates) {
         if(isCoordinatesSuitable(coordinates)) {
-            this.coordinates.x = coordinates.x;
-            this.coordinates.y = coordinates.y;
+            this.coordinates = coordinates;
             if(wayAnimator != null)
             {
                 if(wayAnimator.isRunning())
@@ -589,8 +294,7 @@ public class Character {
     }
     private void setCoordinates(Point coordinates, boolean needToRefreshPixel) {
         if(isCoordinatesSuitable(coordinates)) {
-            this.coordinates.x = coordinates.x;
-            this.coordinates.y = coordinates.y;
+            this.coordinates = coordinates;
             if(needToRefreshPixel) setPixelCoordinates(labyrinthView.toPixelCoordinates(coordinates));
         }
     }
