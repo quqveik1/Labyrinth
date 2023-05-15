@@ -36,7 +36,7 @@ public class LabyrinthGenerator implements Parcelable
     }
 
 
-    protected LabyrinthGenerator(Parcel in)
+    protected LabyrinthGenerator(@NonNull Parcel in)
     {
         dimensionX = in.readInt();
         dimensionY = in.readInt();

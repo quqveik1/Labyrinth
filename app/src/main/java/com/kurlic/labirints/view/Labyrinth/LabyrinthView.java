@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.kurlic.labirints.Fragments.MainGameFragment;
@@ -38,7 +39,7 @@ public class LabyrinthView extends View
 
     int cxCell = 12;
     int cyCell = 24;
-    double oneCellSize;
+    float oneCellSize;
     LabyrinthCell[][] labyrinthCells;
     LabyrinthCell startCell;
 
@@ -290,8 +291,7 @@ public class LabyrinthView extends View
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-
-        mainPaint.setColor(getResources().getColor(R.color.labyrinthBackground));
+        mainPaint.setColor(ContextCompat.getColor(getContext(), R.color.labyrinthBackground));
         mainPaint.setStyle(Paint.Style.FILL);
         w = getWidth();
         h = getHeight();
@@ -304,7 +304,6 @@ public class LabyrinthView extends View
         if(character != null) character.setCellSize(getOneCellSize());
         drawCells(mainPaint, canvas);
         if(character != null) character.draw(canvas, mainPaint);
-
     }
 
     void drawCells(@NonNull Paint paint, @NonNull Canvas canvas)
@@ -351,7 +350,7 @@ public class LabyrinthView extends View
 
     //DrawSection end
 
-    public double getOneCellSize() {
+    public float getOneCellSize() {
         oneCellSize = (float)getWidth() / (float)cxCell;
         return oneCellSize;
     }

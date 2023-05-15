@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.kurlic.labirints.R;
 import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
@@ -23,7 +24,7 @@ public class Character {
     private  Bitmap bm;
     private  Bitmap bmSized;
     private LabyrinthView labyrinthView;
-    double cellSize;
+    float cellSize;
 
     double maxRelativeMissClick = 0.3;
 
@@ -456,7 +457,7 @@ public class Character {
     }
 
 
-    public void setCellSize(double cellSize) {
+    public void setCellSize(float cellSize) {
         this.cellSize = cellSize;
         try {
             bm = BitmapFactory.decodeResource(labyrinthView.getResources(), R.drawable.pikachu);
@@ -473,8 +474,14 @@ public class Character {
         try
         {
             //Point pixelsCoordinates = labyrinthView.toPixelCoordinates(coordinates);
-            canvas.drawBitmap(bmSized, pixelCoordinates.x, pixelCoordinates.y, paint);
-            Log.d("pixelCoordinates", pixelCoordinates.toString());
+            //canvas.drawBitmap(bmSized, pixelCoordinates.x, pixelCoordinates.y, paint);
+            //Log.d("pixelCoordinates", pixelCoordinates.toString());
+
+            paint.setColor(ContextCompat.getColor(labyrinthView.getContext(), R.color.characterColor));
+            paint.setStyle(Paint.Style.FILL);
+            canvas.drawRect((float)getPixelCoordinates().x, (float)getPixelCoordinates().y,
+                    getPixelCoordinates().x + cellSize, getPixelCoordinates().y + cellSize,
+                    paint);
         }
         catch (Exception e)
         {

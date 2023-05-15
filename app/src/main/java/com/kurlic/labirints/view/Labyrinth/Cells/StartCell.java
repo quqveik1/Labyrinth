@@ -49,8 +49,10 @@ public class StartCell extends LabyrinthCell
 
         try
         {
-            canvas.drawBitmap(bmSized, rect.left, rect.top, paint);
-        }catch (Exception e)
+            //canvas.drawBitmap(bmSized, rect.left, rect.top, paint);
+            super.draw(canvas, paint, rect);
+        }
+        catch (Exception e)
         {
             if(labyrinthView != null) if(labyrinthView.getContext() != null) Toast.makeText(labyrinthView.getContext(), e.toString(), Toast.LENGTH_SHORT).show();
         }

@@ -1,5 +1,8 @@
 package com.kurlic.labirints;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,20 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.TextView;
-
 import com.google.android.material.navigation.NavigationView;
 import com.kurlic.labirints.Fragments.HowToPlayFragment;
 import com.kurlic.labirints.Fragments.MainGameFragment;
 import com.kurlic.labirints.Fragments.UserStatisticFragment;
-import com.kurlic.labirints.view.Arrow.Arrow;
+import com.kurlic.labirints.view.Labyrinth.LabyrinthUserData;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private HowToPlayFragment howToPlayFragment;
     private LabyrinthView labyrinthView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

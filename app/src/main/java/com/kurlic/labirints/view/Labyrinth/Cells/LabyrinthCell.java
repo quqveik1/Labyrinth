@@ -1,5 +1,6 @@
 package com.kurlic.labirints.view.Labyrinth.Cells;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -7,6 +8,7 @@ import android.graphics.Rect;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.kurlic.labirints.R;
 import com.kurlic.labirints.view.Labyrinth.Character.Character;
@@ -42,13 +44,20 @@ public class LabyrinthCell
         this.labyrinthView = labyrinthView;
     }
 
+
+    float strokeWidth = 0;
     public void draw(@NonNull Canvas canvas, @NonNull Paint paint, @NonNull Rect rect)
     {
         try
         {
-            drawSolution(canvas, paint, rect);
+            strokeWidth = (float) ((rect.right - rect.left) * 0.1);
             drawBorders(canvas, paint, rect);
-            //drawCellPos(canvas, paint, rect);
+            rect.left += strokeWidth;
+            rect.top += strokeWidth;
+            rect.right -= strokeWidth;
+            rect.bottom -= strokeWidth;
+
+            drawSolution(canvas, paint, rect);
         }
         catch (Exception e)
         {
@@ -60,8 +69,8 @@ public class LabyrinthCell
     {
         if(isInSolutionPath() && getLabyrinthView().getSolutionShowStatus())
         {
-            paint.setColor(getLabyrinthView().getResources().getColor(R.color.solution));
-            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(ContextCompat.getColor(getLabyrinthView().getContext(), R.color.solution));
+            paint.setStyle(Paint.Style.FILL_AND_STROKE);
             canvas.drawRect(rect, paint);
         }
     }
@@ -70,13 +79,21 @@ public class LabyrinthCell
     {
         try
         {
-            paint.setColor(getLabyrinthView().getResources().getColor(R.color.wall));
-            float strokeWidth = (float) ((rect.right - rect.left) * 0.1);
+            paint.setColor(ContextCompat.getColor(getLabyrinthView().getContext(), R.color.wall));
             paint.setStrokeWidth(strokeWidth);
+            /*
             if (upBorder) canvas.drawLine(rect.left, rect.top, rect.right, rect.top, paint);
             if (rightBorder) canvas.drawLine(rect.right, rect.top, rect.right, rect.bottom, paint);
             if (downBorder) canvas.drawLine(rect.left, rect.bottom, rect.right, rect.bottom, paint);
             if (leftBorder) canvas.drawLine(rect.left, rect.top, rect.left, rect.bottom, paint);
+             */
+            float addLen = strokeWidth / 4;
+
+            if (upBorder) canvas.drawLine(rect.left - addLen, rect.top, rect.right + addLen, rect.top, paint);
+            if (rightBorder) canvas.drawLine(rect.right, rect.top - addLen, rect.right, rect.bottom + addLen, paint);
+            if (downBorder) canvas.drawLine(rect.left - addLen, rect.bottom, rect.right + addLen, rect.bottom, paint);
+            if (leftBorder) canvas.drawLine(rect.left, rect.top - addLen, rect.left, rect.bottom + addLen, paint);
+
         }
         catch (Exception e)
         {

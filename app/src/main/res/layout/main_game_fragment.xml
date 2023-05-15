@@ -61,20 +61,22 @@
             android:layout_alignStart= "@id/centralView"
             app:direction="down" />
 
-        <Button
+        <ImageButton
             android:id="@+id/changeLevelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignTop="@id/leftArrow"
-            android:text="@string/updateLabyrinth" />
+            android:src="@drawable/refreshlevel"
+            android:scaleType="centerCrop"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/showSolutionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignTop="@id/leftArrow"
             android:layout_alignParentRight="true"
-            android:text="@string/showSolution" />
+            android:src="@drawable/lampstroked"
+            android:scaleType="centerCrop"/>
     </RelativeLayout>
 
 </LinearLayout>

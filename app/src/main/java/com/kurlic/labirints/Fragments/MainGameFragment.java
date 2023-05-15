@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,9 +23,8 @@ public class MainGameFragment extends MyCommonFragment
     Arrow rightArrow;
     Arrow upArrow;
     Arrow downArrow;
-    Button changeLevelButton;
-    Button showSolutionButton;
-
+    ImageButton changeLevelButton;
+    ImageButton showSolutionButton;
     TextView timerTextView;
 
 
@@ -72,6 +72,14 @@ public class MainGameFragment extends MyCommonFragment
             public void onClick(View v)
             {
                 labyrinthView.changeSolutionShowStatus();
+                if(labyrinthView.getSolutionShowStatus())
+                {
+                    showSolutionButton.setImageResource(R.drawable.lampfilled);
+                }
+                else
+                {
+                    showSolutionButton.setImageResource(R.drawable.lampstroked);
+                }
             }
         });
 
@@ -85,6 +93,7 @@ public class MainGameFragment extends MyCommonFragment
 
         return rootView;
     }
+
 
     public void updateTimerText(String text)
     {
