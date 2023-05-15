@@ -65,13 +65,14 @@ public class LabyrinthCell
         }
     }
 
+    static int SolutionCircleRadius = 10;
     protected void drawSolution(@NonNull Canvas canvas, @NonNull Paint paint, @NonNull Rect rect)
     {
         if(isInSolutionPath() && getLabyrinthView().getSolutionShowStatus())
         {
             paint.setColor(ContextCompat.getColor(getLabyrinthView().getContext(), R.color.solution));
             paint.setStyle(Paint.Style.FILL_AND_STROKE);
-            canvas.drawRect(rect, paint);
+            canvas.drawCircle(rect.centerX(), rect.centerY(), SolutionCircleRadius, paint);
         }
     }
 
@@ -81,12 +82,6 @@ public class LabyrinthCell
         {
             paint.setColor(ContextCompat.getColor(getLabyrinthView().getContext(), R.color.wall));
             paint.setStrokeWidth(strokeWidth);
-            /*
-            if (upBorder) canvas.drawLine(rect.left, rect.top, rect.right, rect.top, paint);
-            if (rightBorder) canvas.drawLine(rect.right, rect.top, rect.right, rect.bottom, paint);
-            if (downBorder) canvas.drawLine(rect.left, rect.bottom, rect.right, rect.bottom, paint);
-            if (leftBorder) canvas.drawLine(rect.left, rect.top, rect.left, rect.bottom, paint);
-             */
             float addLen = strokeWidth / 4;
 
             if (upBorder) canvas.drawLine(rect.left - addLen, rect.top, rect.right + addLen, rect.top, paint);

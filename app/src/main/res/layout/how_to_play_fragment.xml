@@ -10,14 +10,15 @@
         android:id="@+id/howToPlayHandleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Как играть?"
-        android:textSize="40sp"/>
+        android:text="@string/howToPlay"
+        android:textSize="40sp"
+        android:textColor="@color/textColor"/>
     <TextView
         android:id="@+id/howToPlayTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/howToPlayFullInstruction"
         android:textSize="20sp"
-        android:gravity="left"/>
-
+        android:gravity="start"
+        android:textColor="@color/textColor"/>
 </LinearLayout>

@@ -86,7 +86,7 @@ public class UserStatisticFragment extends MyCommonFragment
         return rootView;
     }
 
-    private void setupUI(View view) {
+    private void setupUI(@NonNull View view) {
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -96,7 +96,7 @@ public class UserStatisticFragment extends MyCommonFragment
         });
     }
 
-    private void hideKeyboard(View view) {
+    public void hideKeyboard(View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputMethodManager != null) {
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -119,5 +119,10 @@ public class UserStatisticFragment extends MyCommonFragment
         long time = labyrinthUserData.getMinTime();
         String date = SharedData.timeInMSToString(time);
         userMinTimeTextView.setText(date);
+    }
+    @Override
+    public void onNavigationItemClicked()
+    {
+        hideKeyboard(getView());
     }
 }

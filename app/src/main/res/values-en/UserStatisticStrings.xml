@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="myStatistic">My Statistics</string>
+    <string name="cFinishedLevels">Number of completed levels: </string>
+    <string name="fastestGamePass">Fastest completion: </string>
+    <string name="name">Name: </string>
+</resources>

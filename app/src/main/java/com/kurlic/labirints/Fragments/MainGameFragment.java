@@ -47,47 +47,27 @@ public class MainGameFragment extends MyCommonFragment
         View rootView = inflater.inflate(R.layout.main_game_fragment, container, false);
 
         setLabyrinthView(rootView.findViewById(R.id.labyrinthView));
-        leftArrow = rootView.findViewById(R.id.leftArrow);
-        leftArrow.setLabyrinthView(labyrinthView);
-        rightArrow = rootView.findViewById(R.id.rightArrow);
-        rightArrow.setLabyrinthView(labyrinthView);
-        upArrow = rootView.findViewById(R.id.upArrow);
-        upArrow.setLabyrinthView(labyrinthView);
-        downArrow = rootView.findViewById(R.id.downArrow);
-        downArrow.setLabyrinthView(labyrinthView);
 
         changeLevelButton = rootView.findViewById(R.id.changeLevelButton);
-        changeLevelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                labyrinthView.endLevel();
-            }
-        });
+        changeLevelButton.setOnClickListener(v -> labyrinthView.endLevel());
 
         showSolutionButton = rootView.findViewById(R.id.showSolutionButton);
 
-        showSolutionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
+        showSolutionButton.setOnClickListener(v ->
+        {
+            labyrinthView.changeSolutionShowStatus();
+            if(labyrinthView.getSolutionShowStatus())
             {
-                labyrinthView.changeSolutionShowStatus();
-                if(labyrinthView.getSolutionShowStatus())
-                {
-                    showSolutionButton.setImageResource(R.drawable.lampfilled);
-                }
-                else
-                {
-                    showSolutionButton.setImageResource(R.drawable.lampstroked);
-                }
+                showSolutionButton.setImageResource(R.drawable.lampfilled);
+            }
+            else
+            {
+                showSolutionButton.setImageResource(R.drawable.lampstroked);
             }
         });
 
         timerTextView = rootView.findViewById(R.id.timeTextView);
         labyrinthView.setTimeTextView(timerTextView);
-
-
-
 
         labyrinthView.startGame(this);
 

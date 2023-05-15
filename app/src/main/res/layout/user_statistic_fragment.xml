@@ -15,7 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/name"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textColor="@color/textColor"/>
 
         <EditText
             android:id="@+id/userNameEditText"
@@ -23,7 +24,8 @@
             android:layout_height="wrap_content"
             android:minWidth="100dp"
             android:textSize="20sp"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName"
+            android:textColor="@color/textColor"/>
     </LinearLayout>
 
     <LinearLayout
@@ -34,12 +36,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cFinishedLevels"
-            android:textSize="15sp"/>
+            android:textSize="15sp"
+            android:textColor="@color/textColor"/>
         <TextView
             android:id="@+id/userCFinishedLevelsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="@color/textColor"/>
     </LinearLayout>
 
     <LinearLayout
@@ -50,12 +54,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/fastestGamePass"
-            android:textSize="15sp"/>
+            android:textSize="15sp"
+            android:textColor="@color/textColor"/>
         <TextView
             android:id="@+id/userMinTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="@color/textColor"/>
     </LinearLayout>
 
 

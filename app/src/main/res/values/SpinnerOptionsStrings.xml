@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="optionSystemTheme">Системная тема</string>
+    <string name="optionLightTheme">Светлая тема</string>
+    <string name="optionNightTheme">Тёмная тема</string>
+</resources>

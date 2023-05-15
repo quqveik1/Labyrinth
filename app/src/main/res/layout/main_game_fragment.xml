@@ -5,78 +5,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:alpha="1">
-    <TextView
-        android:id="@+id/timeTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="20sp"/>
-
-    <com.kurlic.labirints.view.Labyrinth.LabyrinthView
-        android:id="@+id/labyrinthView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center" />
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/controlCenterLayout">
-
-        <View
-            android:id="@+id/centralView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerInParent="true" />
-
-        <com.kurlic.labirints.view.Arrow.Arrow
-            android:id="@+id/leftArrow"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
-            android:layout_toStartOf="@id/centralView"
-            android:layout_alignTop="@id/centralView"
-            app:direction="left" />
-
-        <com.kurlic.labirints.view.Arrow.Arrow
-            android:id="@+id/rightArrow"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
-            android:layout_toEndOf="@id/centralView"
-            android:layout_alignTop="@id/centralView"
-            app:direction="right" />
-
-        <com.kurlic.labirints.view.Arrow.Arrow
-            android:id="@+id/upArrow"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_above="@id/centralView"
-            android:layout_alignStart= "@id/centralView"
-            app:direction="up" />
-
-        <com.kurlic.labirints.view.Arrow.Arrow
-            android:id="@+id/downArrow"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/centralView"
-            android:layout_alignStart= "@id/centralView"
-            app:direction="down" />
+        <TextView
+            android:id="@+id/timeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:text="00:00"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:textColor="@color/textColor"/>
 
         <ImageButton
             android:id="@+id/changeLevelButton"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_alignTop="@id/leftArrow"
+            android:background="@android:color/transparent"
             android:src="@drawable/refreshlevel"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/updateLabyrinth"/>
 
         <ImageButton
             android:id="@+id/showSolutionButton"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_alignTop="@id/leftArrow"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
             android:src="@drawable/lampstroked"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/showSolution"/>
     </RelativeLayout>
+
+    <com.kurlic.labirints.view.Labyrinth.LabyrinthView
+        android:id="@+id/labyrinthView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/timeTextView"
+        app:layout_constraintBottom_toTopOf="@+id/controlCenterLayout" />
 
 </LinearLayout>

@@ -247,12 +247,13 @@ public class LabyrinthView extends View
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, widthMeasureSpec);
 
         Point requiredSize = getOnMeasureSize(heightMeasureSpec);
-
         int wRequiredMeasureSpecs = MeasureSpec.makeMeasureSpec(requiredSize.x, MeasureSpec.EXACTLY);
         int hRequiredMeasureSpecs = MeasureSpec.makeMeasureSpec(requiredSize.y, MeasureSpec.EXACTLY);
-        super.onMeasure(wRequiredMeasureSpecs, hRequiredMeasureSpecs);
+        setMeasuredDimension(requiredSize.x, requiredSize.y);
+
     }
 
     @NonNull
@@ -263,16 +264,16 @@ public class LabyrinthView extends View
         Point screenSize = new Point();
         display.getSize(screenSize);
 
+        int recommendedHeight = MeasureSpec.getSize(heightMeasureSpec);
 
-        int height = (int) (screenSize.y * 0.70);
+        int height = (int) (recommendedHeight * 0.97);
         int halfOfHeight = (int) Math.ceil(height * (double)getCxCell() / (double)getCyCell());
 
         Point answer = new Point();
 
-
         if(halfOfHeight > screenSize.x)
         {
-            answer.x = screenSize.x;
+            answer.x = (int) (screenSize.x * 0.9);
             answer.y = answer.x * 2;
         }
         else
@@ -290,6 +291,10 @@ public class LabyrinthView extends View
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        int x = getLeft();
+        int y = getTop();
+        int x1 = getRight();
+        int y1 = getBottom();
 
         mainPaint.setColor(ContextCompat.getColor(getContext(), R.color.labyrinthBackground));
         mainPaint.setStyle(Paint.Style.FILL);
