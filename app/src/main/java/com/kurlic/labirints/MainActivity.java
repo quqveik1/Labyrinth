@@ -1,11 +1,14 @@
 package com.kurlic.labirints;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -13,14 +16,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
 import com.kurlic.labirints.Fragments.HowToPlayFragment;
 import com.kurlic.labirints.Fragments.MainGameFragment;
 import com.kurlic.labirints.Fragments.MyCommonFragment;
 import com.kurlic.labirints.Fragments.SettingsFragment;
 import com.kurlic.labirints.Fragments.UserStatisticFragment;
+import com.kurlic.labirints.view.Labyrinth.LabyrinthUserData;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.Objects;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+{
 
 
     private DrawerLayout drawerLayout;
@@ -33,12 +41,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LabyrinthView labyrinthView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        loadSettings();
         super.onCreate(savedInstanceState);
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        if (getSupportActionBar() != null) {
+        if (getSupportActionBar() != null)
+        {
             //getSupportActionBar().hide();
         }
+
+        setThemeFromSettings();
 
         setContentView(R.layout.activity_main);
 
@@ -51,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        if (getSupportActionBar() != null) {
+        if (getSupportActionBar() != null)
+        {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
@@ -59,7 +73,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mainGameFragment = new MainGameFragment();
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null)
+        {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             searchFragmentAndReplace(R.id.fragmentContainer, mainGameFragment.uniqueTag, mainGameFragment, fragmentManager, fragmentTransaction);
@@ -67,6 +82,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
+    }
+
+    void setThemeFromSettings()
+    {
+        if(SharedData.getSettingsData().getTheme().equals(getResources().getString(R.string.optionLightTheme)))
+        {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+        else if(SharedData.getSettingsData().getTheme().equals(getResources().getString(R.string.optionNightTheme)))
+        {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+    }
+
+    String pathToSettings = "SettingsFile";
+    String settingsDataKey = "SettingsKey";
+
+    void loadSettings()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences(pathToSettings, Context.MODE_PRIVATE);
+        String json = sharedPreferences.getString(settingsDataKey, null);
+
+        if (json != null)
+        {
+            Gson gson = new Gson();
+            SettingsData settingsData = gson.fromJson(json, SettingsData.class);
+            SharedData.setSettingsData(settingsData);
+        }
+        else
+        {
+            SharedData.setSettingsData(new SettingsData());
+        }
+    }
+
+    void saveSettings()
+    {
+        try
+        {
+            Gson gson = new Gson();
+            String json = gson.toJson(SharedData.getSettingsData());
+
+            SharedPreferences sharedPreferences = getSharedPreferences(pathToSettings, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(settingsDataKey, json);
+            editor.apply();
+        }
+        catch (Exception exception)
+        {
+            exception.printStackTrace();
+        }
     }
 
     public LabyrinthView getLabyrinthView()
@@ -171,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStop()
     {
         super.onStop();
-        
+        saveSettings();
     }
 
     void searchFragmentAndReplace(int containerId, String tag, Fragment fragment, @NonNull FragmentManager fragmentManager, FragmentTransaction fragmentTransaction)

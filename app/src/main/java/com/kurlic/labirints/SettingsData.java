@@ -4,15 +4,15 @@ import java.io.Serializable;
 
 public class SettingsData implements Serializable
 {
-    private static String theme = "";
+    private String theme = "";
 
-    public static String getTheme()
+    public String getTheme()
     {
         return theme;
     }
 
-    public static void setTheme(String theme)
+    public void setTheme(String theme)
     {
-        SettingsData.theme = theme;
+        this.theme = theme;
     }
 }

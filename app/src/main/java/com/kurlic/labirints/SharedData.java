@@ -8,6 +8,18 @@ public class SharedData
 {
     static private LabyrinthUserData labyrinthUserData;
 
+    public static SettingsData getSettingsData()
+    {
+        return settingsData;
+    }
+
+    public static void setSettingsData(SettingsData settingsData)
+    {
+        SharedData.settingsData = settingsData;
+    }
+
+    static private SettingsData settingsData;
+
     public static LabyrinthUserData getLabyrinthUserData()
     {
         return labyrinthUserData;

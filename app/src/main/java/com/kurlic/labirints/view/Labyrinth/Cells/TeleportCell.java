@@ -14,8 +14,6 @@ import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 public class TeleportCell extends LabyrinthCell
 {
     Point teleportDest;
-
-
     public TeleportCell(LabyrinthView labyrinthView, int x, int y, Point teleportDest) {
         super(labyrinthView, x, y);
         setTeleportDest(teleportDest);
