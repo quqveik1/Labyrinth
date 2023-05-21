@@ -352,8 +352,6 @@ public class LabyrinthView extends View
 
 
     }
-
-
     //DrawSection end
 
     public float getOneCellSize() {

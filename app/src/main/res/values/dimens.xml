@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="HeaderSize">50sp</dimen>
-    <dimen name="MenuItemSize">32sp</dimen>
+    <dimen name="MenuItemSize">25sp</dimen>
 
 </resources>

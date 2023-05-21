@@ -117,6 +117,20 @@ public class MainGameFragment extends MyCommonFragment
         super.onDestroy();
 
     }
+
+    @Override
+    public void onNavigationItemClicked()
+    {
+        super.onNavigationItemClicked();
+        labyrinthView.onPause();
+    }
+
+    @Override
+    public void onNavigationItemComeBack()
+    {
+        super.onNavigationItemComeBack();
+        labyrinthView.onResume();
+    }
 }
 
 

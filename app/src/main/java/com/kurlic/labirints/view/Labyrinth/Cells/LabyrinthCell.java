@@ -21,7 +21,6 @@ public class LabyrinthCell
 
     private boolean inSolutionPath = false;
 
-
     public LabyrinthCell(@NonNull LabyrinthView labyrinthView, int x, int y)
     {
         setLabyrinthView(labyrinthView);

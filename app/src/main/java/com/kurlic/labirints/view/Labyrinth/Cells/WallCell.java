@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.kurlic.labirints.R;
 import com.kurlic.labirints.view.Labyrinth.Character.Character;
@@ -13,9 +14,6 @@ import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
 public class WallCell extends LabyrinthCell
 {
-
-
-
     public WallCell(LabyrinthView labyrinthView, int x, int y) {
         super(labyrinthView, x, y);
     }
@@ -23,13 +21,11 @@ public class WallCell extends LabyrinthCell
     @Override
     public void draw(@NonNull Canvas canvas, @NonNull Paint paint, @NonNull Rect rect) {
 
-        paint.setColor(labyrinthView.getResources().getColor(R.color.wall));
+        paint.setColor(ContextCompat.getColor(getLabyrinthView().getContext(), R.color.wall));
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRect(rect, paint);
         super.draw(canvas, paint, rect);
     }
-
-
     @Override
     public void onCharacterMove(@NonNull Character character, @NonNull Point moveDelta) {
 

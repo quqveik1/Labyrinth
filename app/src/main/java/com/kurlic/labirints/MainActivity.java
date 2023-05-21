@@ -30,8 +30,6 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
-
-
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private MainGameFragment mainGameFragment;
@@ -45,14 +43,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState)
     {
         loadSettings();
+        setThemeFromSettings();
         super.onCreate(savedInstanceState);
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (getSupportActionBar() != null)
         {
             //getSupportActionBar().hide();
         }
-
-        setThemeFromSettings();
 
         setContentView(R.layout.activity_main);
 
@@ -156,6 +152,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.labyrinthView = labyrinthView;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -172,7 +170,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    MyCommonFragment previousFragment = null;
+    static MyCommonFragment previousFragment;
+    static int r = -1;
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -213,13 +212,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 settingsFragment = new SettingsFragment();
             }
-            searchFragmentAndReplace(R.id.fragmentContainer, settingsFragment.uniqueTag, settingsFragment, fragmentManager, fragmentTransaction);
+            searchFragmentAndAdd(R.id.fragmentContainer, settingsFragment.uniqueTag, settingsFragment, fragmentManager, fragmentTransaction);
         }
 
-
-        //fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-
+        r = 2;
         drawerLayout.closeDrawer(GravityCompat.START);
 
         return true;
@@ -235,38 +231,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else
         {
             fragmentTransaction.show(previousThisTypeFragment);
+            previousThisTypeFragment.onNavigationItemComeBack();
         }
         if(previousFragment != null && previousFragment != fragment)
         {
             previousFragment.onNavigationItemClicked();
-            fragmentTransaction.hide(previousFragment);
+            fragmentTransaction.hide(previousFragment).commit();
         }
         previousFragment = (MyCommonFragment) fragment;
     }
 
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-        saveSettings();
-    }
+        @Override
+        protected void onStop()
+        {
+            super.onStop();
+            saveSettings();
+        }
 
-    void searchFragmentAndReplace(int containerId, String tag, Fragment fragment, @NonNull FragmentManager fragmentManager, FragmentTransaction fragmentTransaction)
-    {
-        Fragment previousThisTypeFragment = fragmentManager.findFragmentByTag(tag);
-        if(previousThisTypeFragment == null)
+        void searchFragmentAndReplace(int containerId, String tag, Fragment fragment, @NonNull FragmentManager fragmentManager, FragmentTransaction fragmentTransaction)
         {
-            fragmentTransaction.replace(containerId, fragment, tag);
+            MyCommonFragment previousThisTypeFragment = (MyCommonFragment) fragmentManager.findFragmentByTag(tag);
+            if(previousThisTypeFragment == null)
+            {
+                fragmentTransaction.replace(containerId, fragment, tag);
+            }
+            else
+            {
+                fragmentTransaction.show(previousThisTypeFragment);
+                previousThisTypeFragment.onNavigationItemComeBack();
+            }
+            if(previousFragment != null && previousFragment != fragment)
+            {
+                previousFragment.onNavigationItemClicked();
+                fragmentTransaction.hide(previousFragment).commit();
+            }
+            previousFragment = (MyCommonFragment) fragment;
         }
-        else
-        {
-            fragmentTransaction.show(previousThisTypeFragment);
-        }
-        if(previousFragment != null && previousFragment != fragment)
-        {
-            previousFragment.onNavigationItemClicked();
-            fragmentTransaction.hide(previousFragment);
-        }
-        previousFragment = (MyCommonFragment) fragment;
-    }
 }

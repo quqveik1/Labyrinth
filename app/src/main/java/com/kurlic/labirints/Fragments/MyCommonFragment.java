@@ -10,4 +10,6 @@ public abstract class MyCommonFragment extends Fragment
         this.uniqueTag = uniqueTag;
     }
     public void onNavigationItemClicked(){};
+
+    public void onNavigationItemComeBack(){};
 }
