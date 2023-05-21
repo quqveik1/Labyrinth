@@ -37,8 +37,9 @@ public class LabyrinthView extends View
     int strokeWidthDp = 1;
     int strokeWidthPixels;
 
+    final int dimen = 2;
     int cxCell = 12;
-    int cyCell = 24;
+    int cyCell = cxCell * 2;
     float oneCellSize;
     LabyrinthCell[][] labyrinthCells;
     LabyrinthCell startCell;
@@ -456,8 +457,15 @@ public class LabyrinthView extends View
         return cxCell;
     }
 
-    public void setCxCell(int cxCell) {
+    private void setCxCell(int cxCell) {
         this.cxCell = cxCell;
+    }
+
+    public void setCxCellUser(int cxCell)
+    {
+        setCxCell(cxCell);
+        setCyCell(cxCell * dimen);
+        endLevel();
     }
 
     public int getCyCell() {

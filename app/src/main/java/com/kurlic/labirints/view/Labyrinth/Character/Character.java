@@ -460,8 +460,8 @@ public class Character {
     public void setCellSize(float cellSize) {
         this.cellSize = cellSize;
         try {
-            bm = BitmapFactory.decodeResource(labyrinthView.getResources(), R.drawable.pikachu);
-            bmSized = Bitmap.createScaledBitmap(bm, (int) cellSize, (int) cellSize, true);
+            //bm = BitmapFactory.decodeResource(labyrinthView.getResources(), R.drawable.pikachu);
+            //bmSized = Bitmap.createScaledBitmap(bm, (int) cellSize, (int) cellSize, true);
         }
         catch (Exception e)
         {

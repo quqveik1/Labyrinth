@@ -2,7 +2,7 @@
 <resources>
     <string name="howToPlay">How to Play?</string>
     <string name="howToPlayFullInstruction"><br>
-        </br>1. Your task is to navigate through the maze from the start to the finish.\n<br>
-        </br>2. You can control the character using the arrows at the bottom or by swiping on the maze.\n<br>
-        </br>3. You can view your progress statistics in the My Statistics menu.</string>
+        </br>1. Your task is to navigate the maze from start to finish\n<br>
+        </br>2. You can control the character by swiping on the maze (←↑↓→)\n<br>
+        </br>3. Additional information is available in the side menu</string>
 </resources>

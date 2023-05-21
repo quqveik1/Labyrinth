@@ -1,6 +1,7 @@
 package com.kurlic.labirints;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setContentView(R.layout.activity_main);
 
+        firstLaunchActions();
+
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.leftMenu);
         navigationView.setNavigationItemSelectedListener(this);
@@ -82,6 +85,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
+    }
+
+    void firstLaunchActions()
+    {
+        if(!SharedData.getSettingsData().wasFirstLaunch())
+        {
+            Intent intent = new Intent(this, IntroActivity.class);
+            startActivity(intent);
+        }
     }
 
     void setThemeFromSettings()
@@ -112,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else
         {
-            SharedData.setSettingsData(new SettingsData());
+            SharedData.setSettingsData(new SettingsData(this));
         }
     }
 
