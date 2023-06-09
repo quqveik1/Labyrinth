@@ -1,10 +1,14 @@
 package com.kurlic.labirints;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -25,8 +29,16 @@ import com.kurlic.labirints.Fragments.SettingsFragment;
 import com.kurlic.labirints.Fragments.UserStatisticFragment;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthUserData;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
+import com.kurlic.labirints.web.LaunchService;
+import com.kurlic.labirints.web.TestService;
 
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -80,7 +92,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
         }
 
+        connectServer();
+    }
 
+    void connectServer()
+    {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.10.102:8080/")
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+
+        LaunchService service = retrofit.create(LaunchService.class);
+
+        Call<Integer> call = service.launch("abc");
+        call.enqueue(new Callback<Integer>() {
+
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response)
+            {
+                //Log.i(TAG, "onResponse well");
+                int c = response.body();
+                Toast.makeText(MainActivity.this, "onResponse well" + c, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t)
+            {
+                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     void firstLaunchActions()
