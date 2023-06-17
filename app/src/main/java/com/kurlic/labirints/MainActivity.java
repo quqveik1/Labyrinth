@@ -34,6 +34,7 @@ import com.kurlic.labirints.web.TestService;
 
 import java.util.Objects;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -93,12 +94,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         connectServer();
+
     }
 
     void connectServer()
     {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.10.102:8080/")
+                .baseUrl("https://labyrinth-server-maven.onrender.com:443/")
+                .client(new OkHttpClient.Builder().build())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
 
@@ -111,14 +114,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onResponse(Call<Integer> call, Response<Integer> response)
             {
                 //Log.i(TAG, "onResponse well");
-                int c = response.body();
-                Toast.makeText(MainActivity.this, "onResponse well" + c, Toast.LENGTH_SHORT).show();
+                if(!response.isSuccessful())
+                {
+                    Log.e("Kurlic.response", "bad response");
+                }
+                else
+                {
+                    Log.i("Kurlic.response", "good response");
+                }
             }
 
             @Override
             public void onFailure(Call<Integer> call, Throwable t)
             {
-                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
             }
         });
     }

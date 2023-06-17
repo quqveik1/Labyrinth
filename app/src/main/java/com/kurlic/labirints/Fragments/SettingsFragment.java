@@ -21,6 +21,7 @@ import com.kurlic.labirints.R;
 import com.kurlic.labirints.SettingsData;
 import com.kurlic.labirints.SharedData;
 
+
 public class SettingsFragment extends MyCommonFragment
 {
     public SettingsFragment()
@@ -70,6 +71,7 @@ public class SettingsFragment extends MyCommonFragment
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
+
         });
 
         return rootView;
