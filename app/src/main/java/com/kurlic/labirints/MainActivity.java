@@ -67,10 +67,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setThemeFromSettings();
         super.onCreate(savedInstanceState);
-        if (getSupportActionBar() != null)
-        {
-            //getSupportActionBar().hide();
-        }
 
         setContentView(R.layout.activity_main);
 
@@ -91,8 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportActionBar().setHomeButtonEnabled(true);
         }
 
-
-        mainGameFragment = new MainGameFragment();
+        mainGameFragment = new MainGameFragment(this);
 
         if (savedInstanceState == null)
         {
@@ -212,13 +207,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             Gson gson = new Gson();
             SettingsData settingsData = gson.fromJson(json, SettingsData.class);
+            if(settingsData.getVersion() < 1) return;
             SharedData.setSettingsData(settingsData);
             settingsData.initSettings(this);
+            return;
         }
-        else
-        {
-            SharedData.setSettingsData(new SettingsData(this));
-        }
+
+        SharedData.setSettingsData(new SettingsData(this));
     }
 
     void saveSettings()
@@ -252,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         int id = item.getItemId();
         if (id == android.R.id.home) {
@@ -279,26 +274,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             if(userStatisticFragment == null)
             {
-                userStatisticFragment = new UserStatisticFragment();
+                userStatisticFragment = new UserStatisticFragment(this);
             }
 
-            searchFragmentAndAdd(R.id.fragmentContainer, userStatisticFragment.uniqueTag, userStatisticFragment, fragmentManager, fragmentTransaction);
+            searchFragmentAndReplace(R.id.fragmentContainer, userStatisticFragment.uniqueTag, userStatisticFragment, fragmentManager, fragmentTransaction);
         }
         if (id == R.id.howToPlayItem)
         {
             if(howToPlayFragment == null)
             {
-                howToPlayFragment = new HowToPlayFragment();
+                howToPlayFragment = new HowToPlayFragment(this);
             }
 
-            searchFragmentAndAdd(R.id.fragmentContainer, howToPlayFragment.uniqueTag, howToPlayFragment, fragmentManager, fragmentTransaction);
+            searchFragmentAndReplace(R.id.fragmentContainer, howToPlayFragment.uniqueTag, howToPlayFragment, fragmentManager, fragmentTransaction);
         }
 
         if (id == R.id.mainGameItem)
         {
             if(mainGameFragment == null)
             {
-                mainGameFragment = new MainGameFragment();
+                mainGameFragment = new MainGameFragment(this);
             }
             searchFragmentAndReplace(R.id.fragmentContainer, mainGameFragment.uniqueTag, mainGameFragment, fragmentManager, fragmentTransaction);
         }
@@ -307,9 +302,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             if(settingsFragment == null)
             {
-                settingsFragment = new SettingsFragment();
+                settingsFragment = new SettingsFragment(this);
             }
-            searchFragmentAndAdd(R.id.fragmentContainer, settingsFragment.uniqueTag, settingsFragment, fragmentManager, fragmentTransaction);
+            searchFragmentAndReplace(R.id.fragmentContainer, settingsFragment.uniqueTag, settingsFragment, fragmentManager, fragmentTransaction);
         }
 
         r = 2;

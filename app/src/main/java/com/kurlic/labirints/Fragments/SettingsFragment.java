@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.kurlic.labirints.R;
 import com.kurlic.labirints.SettingsData;
@@ -24,9 +25,10 @@ import com.kurlic.labirints.SharedData;
 
 public class SettingsFragment extends MyCommonFragment
 {
-    public SettingsFragment()
+    public SettingsFragment(AppCompatActivity activity)
     {
-        super("SettingsFragment");
+        super("SettingsFragment", activity);
+        setToolBarName(getActivityCompat().getString(R.string.settings));
     }
 
     Spinner themeSpinner;

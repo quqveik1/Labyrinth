@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.kurlic.labirints.MainActivity;
@@ -37,9 +38,10 @@ public class UserStatisticFragment extends MyCommonFragment
     TextView userCFinishedLevelsTextView;
     TextView userMinTimeTextView;
 
-    public UserStatisticFragment()
+    public UserStatisticFragment(AppCompatActivity activity)
     {
-        super("UserStatisticFragment");
+        super("UserStatisticFragment", activity);
+        setToolBarName(getActivityCompat().getString(R.string.myStatistic));
     }
 
     @Nullable

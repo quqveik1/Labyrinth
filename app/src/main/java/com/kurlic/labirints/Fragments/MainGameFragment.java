@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.kurlic.labirints.R;
@@ -29,9 +30,10 @@ public class MainGameFragment extends MyCommonFragment
 
 
 
-    public MainGameFragment()
+    public MainGameFragment(AppCompatActivity activity)
     {
-        super("MainGameFragment");
+        super("MainGameFragment", activity);
+        setToolBarName(getActivityCompat().getString(R.string.app_name));
     }
 
     @Override

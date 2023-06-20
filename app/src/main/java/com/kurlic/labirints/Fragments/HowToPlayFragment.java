@@ -7,15 +7,17 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.kurlic.labirints.R;
 
 public class HowToPlayFragment extends MyCommonFragment
 {
-    public HowToPlayFragment()
+    public HowToPlayFragment(AppCompatActivity activity)
     {
-        super("HowToPlayFragment");
+        super("HowToPlayFragment", activity);
+        setToolBarName(getActivityCompat().getString(R.string.howToPlay));
     }
 
     @Nullable
