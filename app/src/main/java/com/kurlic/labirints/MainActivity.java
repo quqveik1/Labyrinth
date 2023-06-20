@@ -1,8 +1,13 @@
 package com.kurlic.labirints;
 
+import android.Manifest;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -15,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -28,6 +35,7 @@ import com.kurlic.labirints.Fragments.MainGameFragment;
 import com.kurlic.labirints.Fragments.MyCommonFragment;
 import com.kurlic.labirints.Fragments.SettingsFragment;
 import com.kurlic.labirints.Fragments.UserStatisticFragment;
+import com.kurlic.labirints.Notifications.RemindToPlayJob;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 import com.kurlic.labirints.web.LaunchService;
 
@@ -57,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SettingsFragment settingsFragment;
     private HowToPlayFragment howToPlayFragment;
     private LabyrinthView labyrinthView;
+
+    private RemindToPlayJob remindToPlayJob;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -98,6 +108,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         connectServer();
+
+        checkNotificationPermission();
+
+        ComponentName serviceComponent = new ComponentName(this, RemindToPlayJob.class);
+        JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
+        builder.setMinimumLatency(1 * 1000); // wait at least
+        builder.setOverrideDeadline(3 * 1000); // maximum delay
+        JobScheduler jobScheduler = (JobScheduler)getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(builder.build());
+
 
     }
 
@@ -160,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
     }
+
 
     public void setLocale(@NonNull Context context, String langCode)
     {
@@ -244,6 +265,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.labyrinthView = labyrinthView;
     }
 
+
+    private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
+
+    private void checkNotificationPermission() {
+        // Проверяем, есть ли уже разрешение
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // Если разрешение не было предоставлено, запрашиваем его
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
+        } else
+        {
+        }
+    }
+
+    // Обработка результата запроса разрешений
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION)
+        {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+
+            } else
+            {
+                // Разрешение не предоставлено, обрабатываем ситуацию
+                // ...
+            }
+        }
+    }
 
 
     @Override
