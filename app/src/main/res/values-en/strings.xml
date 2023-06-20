@@ -8,5 +8,5 @@
     <string name="optionSystemTheme">System theme</string>
     <string name="optionLightTheme">Light theme</string>
     <string name="optionNightTheme">Night theme</string>
-    <string name="onOptionChangedMessage">The theme will change after the application is restarted</string>
+    <string name="onOptionChangedMessage">The setting is applied after restarting the application</string>
 </resources>

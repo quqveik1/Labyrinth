@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 userStatisticFragment = new UserStatisticFragment(this);
             }
 
-            searchFragmentAndReplace(R.id.fragmentContainer, userStatisticFragment.uniqueTag, userStatisticFragment, fragmentManager, fragmentTransaction);
+            searchFragmentAndAdd(R.id.fragmentContainer, userStatisticFragment.uniqueTag, userStatisticFragment, fragmentManager, fragmentTransaction);
         }
         if (id == R.id.howToPlayItem)
         {
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 howToPlayFragment = new HowToPlayFragment(this);
             }
 
-            searchFragmentAndReplace(R.id.fragmentContainer, howToPlayFragment.uniqueTag, howToPlayFragment, fragmentManager, fragmentTransaction);
+            searchFragmentAndAdd(R.id.fragmentContainer, howToPlayFragment.uniqueTag, howToPlayFragment, fragmentManager, fragmentTransaction);
         }
 
         if (id == R.id.mainGameItem)
@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 settingsFragment = new SettingsFragment(this);
             }
-            searchFragmentAndReplace(R.id.fragmentContainer, settingsFragment.uniqueTag, settingsFragment, fragmentManager, fragmentTransaction);
+            searchFragmentAndAdd(R.id.fragmentContainer, settingsFragment.uniqueTag, settingsFragment, fragmentManager, fragmentTransaction);
         }
 
         r = 2;
@@ -313,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    void searchFragmentAndAdd(int containerId, String tag, Fragment fragment, @NonNull FragmentManager fragmentManager, FragmentTransaction fragmentTransaction)
+    void searchFragmentAndAdd(int containerId, String tag, MyCommonFragment fragment, @NonNull FragmentManager fragmentManager, FragmentTransaction fragmentTransaction)
     {
         MyCommonFragment previousThisTypeFragment = (MyCommonFragment) fragmentManager.findFragmentByTag(tag);
         if(previousThisTypeFragment == null)
@@ -330,7 +330,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             previousFragment.onNavigationItemClicked();
             fragmentTransaction.hide(previousFragment).commit();
         }
-        previousFragment = (MyCommonFragment) fragment;
+        previousFragment = fragment;
+        fragment.onEnter();
     }
 
         @Override
@@ -340,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             saveSettings();
         }
 
-        void searchFragmentAndReplace(int containerId, String tag, Fragment fragment, @NonNull FragmentManager fragmentManager, FragmentTransaction fragmentTransaction)
+        void searchFragmentAndReplace(int containerId, String tag, MyCommonFragment fragment, @NonNull FragmentManager fragmentManager, FragmentTransaction fragmentTransaction)
         {
             MyCommonFragment previousThisTypeFragment = (MyCommonFragment) fragmentManager.findFragmentByTag(tag);
             if(previousThisTypeFragment == null)
@@ -357,6 +358,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 previousFragment.onNavigationItemClicked();
                 fragmentTransaction.hide(previousFragment).commit();
             }
-            previousFragment = (MyCommonFragment) fragment;
+            previousFragment = fragment;
+            fragment.onEnter();
         }
 }

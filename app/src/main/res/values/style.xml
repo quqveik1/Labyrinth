@@ -4,4 +4,8 @@
         <attr name="direction" format="string">
         </attr>
     </declare-styleable>
+    <style name="AppTheme" parent="Theme.Material3.DayNight">
+        <!-- Другие атрибуты стиля -->
+        <item name="android:statusBarColor">@color/black</item>
+    </style>
 </resources>

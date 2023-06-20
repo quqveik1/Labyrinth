@@ -7,7 +7,7 @@
     <string name="optionLightTheme">Светлая тема</string>
     <string name="optionNightTheme">Тёмная тема</string>
 
-    <string name="onOptionChangedMessage">Тема смениться после перезапуска приложения</string>
+    <string name="onOptionChangedMessage">Настройка примениться после перезапуска приложения</string>
 
     <string name="russian" translatable="false">Русский</string>
     <string name="english" translatable="false">English</string>

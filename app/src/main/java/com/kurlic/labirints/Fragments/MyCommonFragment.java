@@ -24,14 +24,18 @@ public class MyCommonFragment extends Fragment
 
     public void onNavigationItemComeBack()
     {
-        updateToolBar();
     };
+
+    public void onEnter()
+    {
+        updateToolBar();
+    }
+
 
     @Override
     public void onResume()
     {
         super.onResume();
-        updateToolBar();
     }
 
     void updateToolBar()
