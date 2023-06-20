@@ -8,4 +8,9 @@
     <string name="optionNightTheme">Тёмная тема</string>
 
     <string name="onOptionChangedMessage">Тема смениться после перезапуска приложения</string>
+
+    <string name="russian" translatable="false">Русский</string>
+    <string name="english" translatable="false">English</string>
+    <string name="systemic">Системный язык</string>
+    <string name="language">Язык</string>
 </resources>

@@ -30,6 +30,7 @@ public class SettingsFragment extends MyCommonFragment
     }
 
     Spinner themeSpinner;
+    Spinner languageSpinner;
 
     @Nullable
     @Override
@@ -38,31 +39,63 @@ public class SettingsFragment extends MyCommonFragment
         View rootView = inflater.inflate(R.layout.settings_fragment, container, false);
 
         themeSpinner = rootView.findViewById(R.id.themeSpinner);
-        try
-        {
-            String theme = SharedData.getSettingsData().getTheme();
-            int spinnerPosition = ((ArrayAdapter) themeSpinner.getAdapter()).getPosition(theme);
-            if(spinnerPosition >= 0)
-            {
-                themeSpinner.setSelection(spinnerPosition);
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
 
-        themeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        setDataToSpinnerFromSettings(SharedData.getSettingsData().getTheme(), themeSpinner);
+
+        createOnClickSpinnerAdapter(themeSpinner, new GetSetSpinnerData() {
+            @Override
+            public String getData()
+            {
+                return SharedData.getSettingsData().getTheme();
+            }
+
+            @Override
+            public void setData(String data)
+            {
+                SharedData.getSettingsData().setTheme(data);
+            }
+        });
+
+        languageSpinner = rootView.findViewById(R.id.languageSpinner);
+
+        setDataToSpinnerFromSettings(SharedData.getSettingsData().getLanguage(), languageSpinner);
+
+        createOnClickSpinnerAdapter(languageSpinner, new GetSetSpinnerData() {
+            @Override
+            public String getData()
+            {
+                return SharedData.getSettingsData().getLanguage();
+            }
+
+            @Override
+            public void setData(String data)
+            {
+                SharedData.getSettingsData().setLanguage(data);
+            }
+        });
+
+        return rootView;
+    }
+
+    interface GetSetSpinnerData
+    {
+        public String getData();
+        public void setData(String data);
+    }
+
+    void createOnClickSpinnerAdapter(@NonNull Spinner spinner, GetSetSpinnerData data)
+    {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 String selectedOption = parent.getItemAtPosition(position).toString();
 
-                String currentTheme = SharedData.getSettingsData().getTheme();
+                String currentTheme = data.getData();
 
                 if(!selectedOption.equals(currentTheme))
                 {
-                    SharedData.getSettingsData().setTheme(selectedOption);
+                    data.setData(selectedOption);
                     Toast.makeText(getContext(), getResources().getString(R.string.onOptionChangedMessage), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -71,9 +104,22 @@ public class SettingsFragment extends MyCommonFragment
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-
         });
+    }
 
-        return rootView;
+    void setDataToSpinnerFromSettings(String data, Spinner spinner)
+    {
+        try
+        {
+            int spinnerPosition = ((ArrayAdapter) spinner.getAdapter()).getPosition(data);
+            if(spinnerPosition >= 0)
+            {
+                spinner.setSelection(spinnerPosition);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

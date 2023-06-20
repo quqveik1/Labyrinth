@@ -1,14 +1,15 @@
 package com.kurlic.labirints;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -27,12 +28,17 @@ import com.kurlic.labirints.Fragments.MainGameFragment;
 import com.kurlic.labirints.Fragments.MyCommonFragment;
 import com.kurlic.labirints.Fragments.SettingsFragment;
 import com.kurlic.labirints.Fragments.UserStatisticFragment;
-import com.kurlic.labirints.view.Labyrinth.LabyrinthUserData;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 import com.kurlic.labirints.web.LaunchService;
-import com.kurlic.labirints.web.TestService;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
+
+import javax.xml.validation.Validator;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -55,7 +61,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        anrSolution();
         loadSettings();
+        setLanguageFromSettings();
+
         setThemeFromSettings();
         super.onCreate(savedInstanceState);
         if (getSupportActionBar() != null)
@@ -95,6 +104,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         connectServer();
 
+    }
+
+    void anrSolution()
+    {
+        if (BuildConfig.DEBUG) {
+            // Включение отладочных режимов для разработки
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build());
+        } else {
+            // Отключение ANR-форсирования в релизной сборке
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .permitAll()
+                    .build());
+        }
     }
 
     void connectServer()
@@ -141,6 +166,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public void setLocale(@NonNull Context context, String langCode)
+    {
+        Locale locale = new Locale(langCode);
+        Locale.setDefault(locale);
+        Resources resources = getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
+    }
+
+    void setLanguageFromSettings()
+    {
+        String afterMap = SharedData.getSettingsData().getLanguageCode();
+        if(afterMap == null)
+        {
+            return;
+        }
+
+        setLocale(this, afterMap);
+        SharedData.getSettingsData().initSettings(this);
+    }
+
     void setThemeFromSettings()
     {
         if(SharedData.getSettingsData().getTheme().equals(getResources().getString(R.string.optionLightTheme)))
@@ -166,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Gson gson = new Gson();
             SettingsData settingsData = gson.fromJson(json, SettingsData.class);
             SharedData.setSettingsData(settingsData);
+            settingsData.initSettings(this);
         }
         else
         {
