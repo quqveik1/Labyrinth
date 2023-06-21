@@ -27,6 +27,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
@@ -36,6 +39,7 @@ import com.kurlic.labirints.Fragments.MyCommonFragment;
 import com.kurlic.labirints.Fragments.SettingsFragment;
 import com.kurlic.labirints.Fragments.UserStatisticFragment;
 import com.kurlic.labirints.Notifications.RemindToPlayJob;
+import com.kurlic.labirints.Notifications.RemindToPlayWorker;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 import com.kurlic.labirints.web.LaunchService;
 
@@ -45,6 +49,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.validation.Validator;
 
@@ -111,12 +116,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         checkNotificationPermission();
 
-        ComponentName serviceComponent = new ComponentName(this, RemindToPlayJob.class);
-        JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
-        builder.setMinimumLatency(1 * 1000); // wait at least
-        builder.setOverrideDeadline(3 * 1000); // maximum delay
-        JobScheduler jobScheduler = (JobScheduler)getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        jobScheduler.schedule(builder.build());
+
+        /*
+        PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(RemindToPlayWorker.class, 15, TimeUnit.MINUTES)
+                .build();
+        WorkManager.getInstance(this).enqueue(periodicWork);
+
+         */
+
+        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(RemindToPlayWorker.class)
+                .build();
+
+        WorkManager.getInstance(getApplicationContext()).enqueue(notificationWork);
 
 
     }
@@ -411,5 +422,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             previousFragment = fragment;
             fragment.onEnter();
+        }
+
+        public static void cleanDataForIntent()
+        {
+            previousFragment = null;
         }
 }

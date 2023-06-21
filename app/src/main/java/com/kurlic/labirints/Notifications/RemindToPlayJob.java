@@ -28,35 +28,26 @@ public class RemindToPlayJob extends JobService
     @Override
     public boolean onStartJob(JobParameters params)
     {
-        // Выполните необходимую логику для отправки уведомления
-
-        // Создайте и отправьте уведомление
-
         sendNotification();
 
-        // Запланируйте следующее выполнение задачи через 24 часа
         scheduleJob();
-
-        // Верните true, если есть незавершенная работа, false в противном случае
         return false;
     }
 
     @Override
     public boolean onStopJob(JobParameters params)
     {
-        // Возвращайте true, если задача должна быть повторно запланирована, если она была прервана,
-        // false в противном случае
         return true;
     }
 
-    private void scheduleJob()
+    public void scheduleJob()
     {
         JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
         if (jobScheduler != null)
         {
             ComponentName componentName = new ComponentName(this, RemindToPlayJob.class);
             JobInfo jobInfo = new JobInfo.Builder(1, componentName)
-                    .setMinimumLatency(TimeUnit.SECONDS.toMillis(15)) // Запланировать задачу через 24 часа
+                    .setMinimumLatency(TimeUnit.SECONDS.toMillis(5))
                     .build();
             jobScheduler.schedule(jobInfo);
         }
