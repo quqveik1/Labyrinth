@@ -1,0 +1,9 @@
+<resources>
+    <string-array name="notification_remindToPlay">
+        <item>Погрузись в мир головоломок</item>
+        <item>Твой лабиринт ждет тебя</item>
+        <item>Пора решить новые задачи</item>
+        <item>Новые уровни уже здесь</item>
+        <item>Тебя ждут новые испытания</item>
+    </string-array>
+</resources>

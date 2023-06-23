@@ -47,7 +47,7 @@ public class RemindToPlayJob extends JobService
         {
             ComponentName componentName = new ComponentName(this, RemindToPlayJob.class);
             JobInfo jobInfo = new JobInfo.Builder(1, componentName)
-                    .setMinimumLatency(TimeUnit.SECONDS.toMillis(5))
+                    .setMinimumLatency(TimeUnit.HOURS.toMillis(5))
                     .build();
             jobScheduler.schedule(jobInfo);
         }

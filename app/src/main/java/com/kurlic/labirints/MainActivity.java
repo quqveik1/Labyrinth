@@ -15,8 +15,10 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -27,6 +29,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -102,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportActionBar().setHomeButtonEnabled(true);
         }
 
+        cleanLastActivityData();
+
         mainGameFragment = new MainGameFragment(this);
 
         if (savedInstanceState == null)
@@ -116,20 +121,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         checkNotificationPermission();
 
+        createReminderNotification();
+    }
 
-        /*
-        PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(RemindToPlayWorker.class, 15, TimeUnit.MINUTES)
+    void createReminderNotification()
+    {
+        PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(RemindToPlayWorker.class, 6, TimeUnit.HOURS)
                 .build();
-        WorkManager.getInstance(this).enqueue(periodicWork);
-
-         */
-
-        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(RemindToPlayWorker.class)
-                .build();
-
-        WorkManager.getInstance(getApplicationContext()).enqueue(notificationWork);
-
-
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork("LabyrinthReminder", ExistingPeriodicWorkPolicy.KEEP, periodicWork);
     }
 
     void anrSolution()
@@ -235,11 +234,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences sharedPreferences = getSharedPreferences(pathToSettings, Context.MODE_PRIVATE);
         String json = sharedPreferences.getString(settingsDataKey, null);
 
-        if (json != null)
+        while(json != null)
         {
             Gson gson = new Gson();
             SettingsData settingsData = gson.fromJson(json, SettingsData.class);
-            if(settingsData.getVersion() < 1) return;
+            if(settingsData.getVersion() < 1) break;
             SharedData.setSettingsData(settingsData);
             settingsData.initSettings(this);
             return;
@@ -280,16 +279,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
 
     private void checkNotificationPermission() {
-        // Проверяем, есть ли уже разрешение
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            // Если разрешение не было предоставлено, запрашиваем его
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
-        } else
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
         {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
+            }
         }
-    }
 
-    // Обработка результата запроса разрешений
+    }
+    
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -301,8 +300,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             } else
             {
-                // Разрешение не предоставлено, обрабатываем ситуацию
-                // ...
+                Toast.makeText(this, getString(R.string.onPermissionDeclined), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -424,8 +422,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment.onEnter();
         }
 
+        static MyCommonFragment previousActivityFragment;
+        static AppCompatActivity previousActivity;
+
+        void cleanLastActivityData()
+        {
+            //if(previousActivityFragment != null && previousActivity != null) previousActivity.getSupportFragmentManager().beginTransaction().remove(previousActivityFragment).commit();
+            previousFragment = null;
+            previousActivity = this;
+        }
+
         public static void cleanDataForIntent()
         {
-            previousFragment = null;
+            previousActivityFragment = previousFragment;
         }
 }

@@ -21,6 +21,8 @@ import androidx.work.WorkerParameters;
 import com.kurlic.labirints.MainActivity;
 import com.kurlic.labirints.R;
 
+import java.util.Random;
+
 
 public class RemindToPlayWorker extends Worker
 {
@@ -62,13 +64,19 @@ public class RemindToPlayWorker extends Worker
     {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         MainActivity.cleanDataForIntent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+
+        String[] notificationsArray = getApplicationContext().getResources().getStringArray(R.array.notification_remindToPlay);
+        Random random = new Random();
+        int randomNumber = random.nextInt(notificationsArray.length);
+        String notificationDescribtion = notificationsArray[randomNumber];
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.icon2)
-                .setContentTitle("Сыграем?")
-                .setContentText("Текст уведомления")
+                .setContentTitle(getApplicationContext().getString(R.string.app_name))
+                .setContentText(notificationDescribtion)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);

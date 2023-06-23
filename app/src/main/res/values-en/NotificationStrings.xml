@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="notification_remindToPlay">
+        <item>Dive into the world of puzzles</item>
+        <item>Your labyrinth is waiting for you</item>
+        <item>Time to solve new tasks</item>
+        <item>New levels are here</item>
+        <item>New challenges await you</item>
+    </string-array>
+</resources>

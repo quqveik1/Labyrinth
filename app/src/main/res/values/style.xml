@@ -6,6 +6,6 @@
     </declare-styleable>
     <style name="AppTheme" parent="Theme.Material3.DayNight">
         <!-- Другие атрибуты стиля -->
-        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:statusBarColor">#7A7A7A</item>
     </style>
 </resources>

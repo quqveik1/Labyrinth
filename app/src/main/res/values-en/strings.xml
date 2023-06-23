@@ -9,4 +9,5 @@
     <string name="optionLightTheme">Light theme</string>
     <string name="optionNightTheme">Night theme</string>
     <string name="onOptionChangedMessage">The setting is applied after restarting the application</string>
+    <string name="onPermissionDeclined">You will lose any functionality by declining the permission. Restore the permission in the application settings.</string>
 </resources>

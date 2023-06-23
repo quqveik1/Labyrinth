@@ -3,4 +3,5 @@
     <string name="updateLabyrinth">Обновить</string>
     <string name="showSolution">Решение</string>
     <string name="myGameItem">Моя игра</string>
+    <string name="onPermissionDeclined">Вы потеряете часть функционала, отклонив разрешение. Верните разрешение в настройках приложения.</string>
 </resources>

@@ -94,8 +94,8 @@ public class LabyrinthView extends View
 
     }
 
-    String pathToUserData = "userData";
-    String userDataKey = "userDataKey";
+    static String pathToUserData = "userData";
+    static String userDataKey = "userDataKey";
     void readUserData()
     {
 
