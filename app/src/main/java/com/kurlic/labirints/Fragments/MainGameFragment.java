@@ -1,21 +1,25 @@
 package com.kurlic.labirints.Fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import com.kurlic.labirints.R;
+import com.kurlic.labirints.SharedData;
 import com.kurlic.labirints.view.Arrow.Arrow;
+import com.kurlic.labirints.view.Labyrinth.LabyrinthApi;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainGameFragment extends MyCommonFragment
 {
@@ -27,8 +31,6 @@ public class MainGameFragment extends MyCommonFragment
     ImageButton changeLevelButton;
     ImageButton showSolutionButton;
     TextView timerTextView;
-
-
 
     public MainGameFragment(AppCompatActivity activity)
     {
@@ -94,9 +96,30 @@ public class MainGameFragment extends MyCommonFragment
         return labyrinthView;
     }
 
-    public void setLabyrinthView(LabyrinthView labyrinthView)
+    public void setLabyrinthView(@NonNull LabyrinthView labyrinthView)
     {
         this.labyrinthView = labyrinthView;
+        labyrinthView.setLabyrinthApi(new LabyrinthApiMain());
+    }
+
+    class LabyrinthApiMain implements LabyrinthApi
+    {
+        @Override
+        public void onGameFinished(long time)
+        {
+            String timeStr = SharedData.timeInMSToString(time);
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Поздравляем!")
+                    .setMessage("Вы успешно прошли уровень за " + timeStr + " секунд!")
+                    .setPositiveButton("ОК", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+
+        }
     }
 
     @Override

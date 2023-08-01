@@ -64,14 +64,15 @@ public class LabyrinthCell
         }
     }
 
-    static int SolutionCircleRadius = 10;
+    static float SolutionCircleRadiusPercatage = 0.3f;
     protected void drawSolution(@NonNull Canvas canvas, @NonNull Paint paint, @NonNull Rect rect)
     {
         if(isInSolutionPath() && getLabyrinthView().getSolutionShowStatus())
         {
             paint.setColor(ContextCompat.getColor(getLabyrinthView().getContext(), R.color.solution));
             paint.setStyle(Paint.Style.FILL_AND_STROKE);
-            canvas.drawCircle(rect.centerX(), rect.centerY(), SolutionCircleRadius, paint);
+            int r = (int) (rect.width() * SolutionCircleRadiusPercatage);
+            canvas.drawCircle(rect.centerX(), rect.centerY(), r, paint);
         }
     }
 

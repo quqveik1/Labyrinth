@@ -78,6 +78,18 @@ public class LabyrinthView extends View
         realConstructor(context);
     }
 
+    LabyrinthApi labyrinthApi = null;
+
+    public LabyrinthApi getLabyrinthApi()
+    {
+        return labyrinthApi;
+    }
+
+    public void setLabyrinthApi(LabyrinthApi labyrinthApi)
+    {
+        this.labyrinthApi = labyrinthApi;
+    }
+
     void realConstructor(Context context)
     {
         swipeDetector = new GestureDetector(context, new LabyrinthSwipeDetector(this));
@@ -234,7 +246,6 @@ public class LabyrinthView extends View
     {
         Parcelable superState = super.onSaveInstanceState();
         saveUserData();
-
 
         return superState;
     }
@@ -506,8 +517,10 @@ public class LabyrinthView extends View
 
     public void finishLevel()
     {
-        SharedData.getLabyrinthUserData().checkAndSetMinTime(timeThread.getElapsedTime());
+        long time = timeThread.getElapsedTime();
+        SharedData.getLabyrinthUserData().checkAndSetMinTime(time);
         SharedData.getLabyrinthUserData().newLevelWasFinished();
+        if(labyrinthApi != null) labyrinthApi.onGameFinished(time);
         endLevel();
     }
 
