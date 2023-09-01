@@ -51,4 +51,6 @@
 
 Доступны по ссылке в [презентации](https://docs.google.com/presentation/d/1oh650l39s7fWBIVV6-aMqEn9LmTCZibHd6kOkeETdoY/edit?usp=sharing)
 
-
+------
+- [EN](https://github.com/quqveik1/Labyrinth/blob/main/README_EN.md)
+- [DE](https://github.com/quqveik1/Labyrinth/blob/main/README_DE.md)
