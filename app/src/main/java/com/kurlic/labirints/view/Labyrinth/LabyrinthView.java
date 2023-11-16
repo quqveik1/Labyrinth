@@ -1,5 +1,7 @@
 package com.kurlic.labirints.view.Labyrinth;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -31,8 +33,7 @@ import com.kurlic.labirints.view.Labyrinth.Cells.LabyrinthCell;
 import com.kurlic.labirints.view.Labyrinth.Cells.StartCell;
 import com.kurlic.labirints.view.Labyrinth.Character.Character;
 
-public class LabyrinthView extends View
-{
+public class LabyrinthView extends View {
     private int w, h;
     int strokeWidthDp = 1;
     int strokeWidthPixels;
@@ -68,7 +69,8 @@ public class LabyrinthView extends View
         realConstructor(context);
     }
 
-    public LabyrinthView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public LabyrinthView(Context context,
+                         @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         realConstructor(context);
     }
@@ -80,18 +82,15 @@ public class LabyrinthView extends View
 
     LabyrinthApi labyrinthApi = null;
 
-    public LabyrinthApi getLabyrinthApi()
-    {
+    public LabyrinthApi getLabyrinthApi() {
         return labyrinthApi;
     }
 
-    public void setLabyrinthApi(LabyrinthApi labyrinthApi)
-    {
+    public void setLabyrinthApi(LabyrinthApi labyrinthApi) {
         this.labyrinthApi = labyrinthApi;
     }
 
-    void realConstructor(Context context)
-    {
+    void realConstructor(Context context) {
         swipeDetector = new GestureDetector(context, new LabyrinthSwipeDetector(this));
     }
 
@@ -108,8 +107,8 @@ public class LabyrinthView extends View
 
     static String pathToUserData = "userData";
     static String userDataKey = "userDataKey";
-    void readUserData()
-    {
+
+    void readUserData() {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(pathToUserData, Context.MODE_PRIVATE);
         String json = sharedPreferences.getString(userDataKey, null);
@@ -118,18 +117,14 @@ public class LabyrinthView extends View
             Gson gson = new Gson();
             LabyrinthUserData labyrinthUserData = gson.fromJson(json, LabyrinthUserData.class);
             SharedData.setLabyrinthUserData(labyrinthUserData);
-        }
-        else
-        {
+        } else {
             SharedData.setLabyrinthUserData(new LabyrinthUserData());
         }
     }
 
 
-    void saveUserData()
-    {
-        try
-        {
+    void saveUserData() {
+        try {
             Gson gson = new Gson();
             String json = gson.toJson(SharedData.getLabyrinthUserData());
 
@@ -137,56 +132,41 @@ public class LabyrinthView extends View
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(userDataKey, json);
             editor.apply();
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
     }
 
-    void levelConstructor()
-    {
-        try
-        {
+    void levelConstructor() {
+        try {
             labyrinthCells = new LabyrinthCell[getCxCell()][getCyCell()];
 
-            for (int x = 0; x < getCxCell(); x++)
-            {
-                for (int y = 0; y < getCyCell(); y++)
-                {
+            for (int x = 0; x < getCxCell(); x++) {
+                for (int y = 0; y < getCyCell(); y++) {
                     setLabyrinthCell(new LabyrinthCell(this, x, y));
                 }
             }
 
-            try
-            {
+            try {
                 StartCell startCell = new StartCell(this, 0, 0);
                 setLabyrinthCell(startCell);
                 setStartCell(startCell);
                 setLabyrinthCell(new FinishCell(this, getCxCell() - 1, getCyCell() - 1));
 
                 generateLevel();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 //Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
         }
 
-        if(getOneCellSize() > 0)
-        {
-            for (int x = 0; x < getCxCell(); x++)
-            {
-                for (int y = 0; y < getCyCell(); y++)
-                {
+        if (getOneCellSize() > 0) {
+            for (int x = 0; x < getCxCell(); x++) {
+                for (int y = 0; y < getCyCell(); y++) {
                     LabyrinthCell cell = getCell(x, y);
-                    if(cell != null)
-                    {
-                        cell.onCellSize((int)getOneCellSize());
+                    if (cell != null) {
+                        cell.onCellSize((int) getOneCellSize());
                     }
                 }
             }
@@ -195,27 +175,23 @@ public class LabyrinthView extends View
 
     }
 
-    public void startGame(MainGameFragment activity)
-    {
+    public void startGame(MainGameFragment activity) {
         this.mainActivity = activity;
         commonConstructor();
     }
 
 
-    private void generateLevel()
-    {
+    private void generateLevel() {
         setActiveLabyrinth(new LabyrinthGenerator(getCxCell(), getCyCell(), this));
         timeThread.reset();
         invalidate();
     }
 
-    public LabyrinthGenerator getActiveLabyrinth()
-    {
+    public LabyrinthGenerator getActiveLabyrinth() {
         return activeLabyrinth;
     }
 
-    public void setActiveLabyrinth(LabyrinthGenerator activeLabyrinth)
-    {
+    public void setActiveLabyrinth(LabyrinthGenerator activeLabyrinth) {
         this.activeLabyrinth = activeLabyrinth;
     }
 
@@ -223,27 +199,23 @@ public class LabyrinthView extends View
         this.timeTextView = timeTextView;
     }
 
-    public void setLabyrinthCell(LabyrinthCell labyrinthCell, int x, int y)
-    {
-        if(0 <= x && x < getCxCell() && 0 <= y && y < getCyCell())
-        {
+    public void setLabyrinthCell(LabyrinthCell labyrinthCell, int x, int y) {
+        if (0 <= x && x < getCxCell() && 0 <= y && y < getCyCell()) {
             labyrinthCells[x][y] = labyrinthCell;
         }
     }
 
-    public void setLabyrinthCell(@NonNull LabyrinthCell labyrinthCell)
-    {
+    public void setLabyrinthCell(@NonNull LabyrinthCell labyrinthCell) {
         Point coordinates = labyrinthCell.getLabyrinthPosition();
-        if(0 <= coordinates.x && coordinates.x < getCxCell() && 0 <= coordinates.y && coordinates.y < getCyCell())
-        {
+        if (0 <= coordinates.x && coordinates.x < getCxCell() && 0 <= coordinates.y &&
+                coordinates.y < getCyCell()) {
             labyrinthCells[coordinates.x][coordinates.y] = labyrinthCell;
         }
     }
 
     @Nullable
     @Override
-    protected Parcelable onSaveInstanceState()
-    {
+    protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         saveUserData();
 
@@ -251,8 +223,7 @@ public class LabyrinthView extends View
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state)
-    {
+    protected void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(state);
         readUserData();
     }
@@ -269,8 +240,7 @@ public class LabyrinthView extends View
     }
 
     @NonNull
-    Point getOnMeasureSize(int heightMeasureSpec)
-    {
+    Point getOnMeasureSize(int heightMeasureSpec) {
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point screenSize = new Point();
@@ -279,17 +249,14 @@ public class LabyrinthView extends View
         int recommendedHeight = MeasureSpec.getSize(heightMeasureSpec);
 
         int height = (int) (recommendedHeight * 0.97);
-        int halfOfHeight = (int) Math.ceil(height * (double)getCxCell() / (double)getCyCell());
+        int halfOfHeight = (int) Math.ceil(height * (double) getCxCell() / (double) getCyCell());
 
         Point answer = new Point();
 
-        if(halfOfHeight > screenSize.x)
-        {
+        if (halfOfHeight > screenSize.x) {
             answer.x = (int) (screenSize.x * 0.9);
             answer.y = answer.x * 2;
-        }
-        else
-        {
+        } else {
             answer.x = halfOfHeight;
             answer.y = height;
         }
@@ -300,6 +267,7 @@ public class LabyrinthView extends View
 
     Paint mainPaint = new Paint();
     Rect mainRect = new Rect();
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -318,25 +286,24 @@ public class LabyrinthView extends View
 
         drawNet(mainPaint, canvas);
 
-        if(character != null) character.setCellSize(getOneCellSize());
+        if (character != null) {
+            character.setCellSize(getOneCellSize());
+        }
         drawCells(mainPaint, canvas);
-        if(character != null) character.draw(canvas, mainPaint);
+        if (character != null) {
+            character.draw(canvas, mainPaint);
+        }
     }
 
-    void drawCells(@NonNull Paint paint, @NonNull Canvas canvas)
-    {
-        for(int x = 0; x < getCxCell(); x++)
-        {
-            for (int y = 0; y < getCyCell(); y++)
-            {
+    void drawCells(@NonNull Paint paint, @NonNull Canvas canvas) {
+        for (int x = 0; x < getCxCell(); x++) {
+            for (int y = 0; y < getCyCell(); y++) {
                 Point start = toPixelCoordinates(x, y);
-                Rect cellRect = new Rect(start.x, start.y, (int) (start.x + oneCellSize), (int) (start.y + oneCellSize));
-                try
-                {
+                Rect cellRect = new Rect(start.x, start.y, (int) (start.x + oneCellSize), (int) (
+                        start.y + oneCellSize));
+                try {
                     getCell(x, y).draw(canvas, paint, cellRect);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     Log.e(String.valueOf(Log.ERROR), e.toString());
                 }
 
@@ -344,21 +311,19 @@ public class LabyrinthView extends View
         }
 
     }
-    void drawNet (@NonNull Paint paint, Canvas canvas)
-    {
+
+    void drawNet(@NonNull Paint paint, Canvas canvas) {
         paint.setColor(getResources().getColor(R.color.labyrinthNet));
         paint.setStyle(Paint.Style.STROKE);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(getStrokeWidthPixels());
         oneCellSize = getOneCellSize();
-        for(double i = oneCellSize; i < w; i += oneCellSize)
-        {
-            canvas.drawLine((float)i, 0, (float) i, h, paint);
+        for (double i = oneCellSize; i < w; i += oneCellSize) {
+            canvas.drawLine((float) i, 0, (float) i, h, paint);
         }
 
-        for(double i = oneCellSize; i < h; i += oneCellSize)
-        {
-            canvas.drawLine(0, (float)i, w, (float)i, paint);
+        for (double i = oneCellSize; i < h; i += oneCellSize) {
+            canvas.drawLine(0, (float) i, w, (float) i, paint);
         }
 
 
@@ -366,7 +331,7 @@ public class LabyrinthView extends View
     //DrawSection end
 
     public float getOneCellSize() {
-        oneCellSize = (float)getWidth() / (float)cxCell;
+        oneCellSize = (float) getWidth() / (float) cxCell;
         return oneCellSize;
     }
 
@@ -378,34 +343,28 @@ public class LabyrinthView extends View
 
 
     @Override
-    public boolean onTouchEvent(@NonNull MotionEvent event)
-    {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
         return swipeDetector.onTouchEvent(event) || super.onTouchEvent(event);
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh)
-    {
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        for(int x = 0; x < getCxCell(); x++)
-        {
-            for(int y = 0; y < getCyCell(); y++)
-            {
+        for (int x = 0; x < getCxCell(); x++) {
+            for (int y = 0; y < getCyCell(); y++) {
                 LabyrinthCell labyrinthCell = getCell(x, y);
-                if(labyrinthCell != null) labyrinthCell.onCellSize((int) getOneCellSize());
+                if (labyrinthCell != null) {
+                    labyrinthCell.onCellSize((int) getOneCellSize());
+                }
             }
         }
     }
 
-    public Point getCellPosition(LabyrinthCell cell)
-    {
+    public Point getCellPosition(LabyrinthCell cell) {
         Point answer = new Point();
-        for(int x = 0; x < getCxCell(); x++)
-        {
-            for (int y = 0; y < getCyCell(); y++)
-            {
-                if(cell == getCell(x, y))
-                {
+        for (int x = 0; x < getCxCell(); x++) {
+            for (int y = 0; y < getCyCell(); y++) {
+                if (cell == getCell(x, y)) {
                     answer.set(x, y);
                 }
             }
@@ -414,27 +373,23 @@ public class LabyrinthView extends View
         return answer;
     }
 
-    public LabyrinthCell getCell(int x, int y)
-    {
+    public LabyrinthCell getCell(int x, int y) {
         return labyrinthCells[x][y];
     }
-    public LabyrinthCell getCell(@NonNull Point point)
-    {
+
+    public LabyrinthCell getCell(@NonNull Point point) {
         return labyrinthCells[point.x][point.y];
     }
 
-    public boolean canEnterCell(int x, int y)
-    {
+    public boolean canEnterCell(int x, int y) {
         return getCell(x, y).canEnter(character);
     }
 
-    public boolean canEnterCell(@NonNull Point point)
-    {
+    public boolean canEnterCell(@NonNull Point point) {
         return canEnterCell(point.x, point.y);
     }
 
-    public Point toCellCoordinates(int x, int y)
-    {
+    public Point toCellCoordinates(int x, int y) {
         Point answer = new Point();
 
         try {
@@ -446,18 +401,15 @@ public class LabyrinthView extends View
             ynum = Integer.min(ynum, cyCell - 1);
 
             answer.set(xnum, ynum);
-        }
-        catch (Exception e)
-        {
-            //Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e(TAG, "toCellCoordinates: " + e.toString());
         }
 
         return answer;
 
     }
 
-    public Point toCellCoordinates(@NonNull Point point)
-    {
+    public Point toCellCoordinates(@NonNull Point point) {
         return toCellCoordinates(point.x, point.y);
 
     }
@@ -470,8 +422,7 @@ public class LabyrinthView extends View
         this.cxCell = cxCell;
     }
 
-    public void setCxCellUser(int cxCell)
-    {
+    public void setCxCellUser(int cxCell) {
         setCxCell(cxCell);
         setCyCell(cxCell * dimen);
         endLevel();
@@ -485,8 +436,7 @@ public class LabyrinthView extends View
         this.cyCell = cyCell;
     }
 
-    public Point toPixelCoordinates(int x, int y)
-    {
+    public Point toPixelCoordinates(int x, int y) {
         Point answer = new Point();
 
         int xnum = (int) (x * getOneCellSize());
@@ -503,46 +453,41 @@ public class LabyrinthView extends View
 
     }
 
-    public Point toPixelCoordinates(@NonNull Point point)
-    {
+    public Point toPixelCoordinates(@NonNull Point point) {
         return toPixelCoordinates(point.x, point.y);
 
     }
 
-    public void endLevel()
-    {
+    public void endLevel() {
         getCharacter().setCoordinates(getStartCell().getLabyrinthPosition());
         levelConstructor();
     }
 
-    public void finishLevel()
-    {
+    public void finishLevel() {
         long time = timeThread.getElapsedTime();
         SharedData.getLabyrinthUserData().checkAndSetMinTime(time);
         SharedData.getLabyrinthUserData().newLevelWasFinished();
-        if(labyrinthApi != null) labyrinthApi.onGameFinished(time);
+        if (labyrinthApi != null) {
+            labyrinthApi.onGameFinished(time);
+        }
         endLevel();
     }
 
 
-    public void onPause()
-    {
+    public void onPause() {
         timeThread.pause();
     }
 
-    public void onResume()
-    {
+    public void onResume() {
         timeThread.resumeWork();
     }
 
 
-    public LabyrinthCell getStartCell()
-    {
+    public LabyrinthCell getStartCell() {
         return startCell;
     }
 
-    public void setStartCell(LabyrinthCell startCell)
-    {
+    public void setStartCell(LabyrinthCell startCell) {
         this.startCell = startCell;
     }
 
@@ -550,19 +495,16 @@ public class LabyrinthView extends View
         return character;
     }
 
-    public boolean getSolutionShowStatus()
-    {
+    public boolean getSolutionShowStatus() {
         return solutionShowStatus;
     }
 
-    public void changeSolutionShowStatus()
-    {
+    public void changeSolutionShowStatus() {
         setSolutionShowStatus(!getSolutionShowStatus());
         invalidate();
     }
 
-    public void setSolutionShowStatus(boolean solutionShowStatus)
-    {
+    public void setSolutionShowStatus(boolean solutionShowStatus) {
         this.solutionShowStatus = solutionShowStatus;
     }
 }

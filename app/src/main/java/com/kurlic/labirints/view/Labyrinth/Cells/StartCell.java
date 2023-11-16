@@ -12,49 +12,41 @@ import androidx.annotation.NonNull;
 import com.kurlic.labirints.R;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
-public class StartCell extends LabyrinthCell
-{
+public class StartCell extends LabyrinthCell {
     Bitmap bm;
     Bitmap bmSized;
 
-    public StartCell(LabyrinthView labyrinthView, int x, int y)
-    {
+    public StartCell(LabyrinthView labyrinthView, int x, int y) {
         super(labyrinthView, x, y);
         try {
             bm = BitmapFactory.decodeResource(getLabyrinthView().getResources(), R.drawable.startcell);
-        }
-        catch (Exception e)
-        {
-            //if(labyrinthView != null) if(labyrinthView.getContext() != null) Toast.makeText(labyrinthView.getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            logException(e);
         }
     }
 
 
     @Override
-    public void onCellSize(@NonNull int newSize)
-    {
+    public void onCellSize(@NonNull int newSize) {
         super.onCellSize(newSize);
-        try
-        {
+        try {
             bmSized = Bitmap.createScaledBitmap(bm, newSize, newSize, true);
-        }
-        catch (Exception e)
-        {
-            //if(labyrinthView != null) if(labyrinthView.getContext() != null) Toast.makeText(labyrinthView.getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            logException(e);
         }
     }
 
     @Override
     public void draw(@NonNull Canvas canvas, @NonNull Paint paint, @NonNull Rect rect) {
 
-        try
-        {
-            //canvas.drawBitmap(bmSized, rect.left, rect.top, paint);
+        try {
             super.draw(canvas, paint, rect);
-        }
-        catch (Exception e)
-        {
-            if(labyrinthView != null) if(labyrinthView.getContext() != null) Toast.makeText(labyrinthView.getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            if (labyrinthView != null) {
+                if (labyrinthView.getContext() != null) {
+                    logException(e);
+                }
+            }
         }
 
     }

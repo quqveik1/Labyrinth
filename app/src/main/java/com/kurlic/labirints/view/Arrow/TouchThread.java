@@ -6,7 +6,7 @@ import android.widget.Toast;
 import com.kurlic.labirints.view.Labyrinth.Character.Character;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
-public class TouchThread extends Thread{
+public class TouchThread extends Thread {
     private LabyrinthView labyrinthView;
     private Point moveDelta;
     private int oneMoveTimeDelta;
@@ -39,9 +39,7 @@ public class TouchThread extends Thread{
                     }
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Toast.makeText(labyrinthView.getContext(), e.toString(), Toast.LENGTH_LONG).show();
 
         }

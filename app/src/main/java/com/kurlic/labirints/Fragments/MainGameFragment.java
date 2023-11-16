@@ -19,35 +19,30 @@ import com.kurlic.labirints.view.Arrow.Arrow;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthApi;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-public class MainGameFragment extends MyCommonFragment
-{
+public class MainGameFragment extends MyCommonFragment {
     LabyrinthView labyrinthView;
-    Arrow leftArrow;
-    Arrow rightArrow;
-    Arrow upArrow;
-    Arrow downArrow;
     ImageButton changeLevelButton;
     ImageButton showSolutionButton;
     TextView timerTextView;
 
-    public MainGameFragment(AppCompatActivity activity)
-    {
+    public MainGameFragment(AppCompatActivity activity) {
         super("MainGameFragment", activity);
         setToolBarName(getActivityCompat().getString(R.string.app_name));
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
-    {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.main_game_fragment, container, false);
 
         setLabyrinthView(rootView.findViewById(R.id.labyrinthView));
@@ -60,12 +55,9 @@ public class MainGameFragment extends MyCommonFragment
         showSolutionButton.setOnClickListener(v ->
         {
             labyrinthView.changeSolutionShowStatus();
-            if(labyrinthView.getSolutionShowStatus())
-            {
+            if (labyrinthView.getSolutionShowStatus()) {
                 showSolutionButton.setImageResource(R.drawable.lampfilled);
-            }
-            else
-            {
+            } else {
                 showSolutionButton.setImageResource(R.drawable.lampstroked);
             }
         });
@@ -79,37 +71,30 @@ public class MainGameFragment extends MyCommonFragment
     }
 
 
-    public void updateTimerText(String text)
-    {
-        getActivity().runOnUiThread(new Runnable()
-        {
+    public void updateTimerText(String text) {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 timerTextView.setText(text);
             }
         });
     }
 
-    public LabyrinthView getLabyrinthView()
-    {
+    public LabyrinthView getLabyrinthView() {
         return labyrinthView;
     }
 
-    public void setLabyrinthView(@NonNull LabyrinthView labyrinthView)
-    {
+    public void setLabyrinthView(@NonNull LabyrinthView labyrinthView) {
         this.labyrinthView = labyrinthView;
         labyrinthView.setLabyrinthApi(new LabyrinthApiMain());
     }
 
-    class LabyrinthApiMain implements LabyrinthApi
-    {
+    class LabyrinthApiMain implements LabyrinthApi {
         @Override
-        public void onGameFinished(long time)
-        {
+        public void onGameFinished(long time) {
             String timeStr = SharedData.timeInMSToString(time);
 
-            new AlertDialog.Builder(getContext())
+            new AlertDialog.Builder(requireContext())
                     .setTitle("Поздравляем!")
                     .setMessage("Вы успешно прошли уровень за " + timeStr + " секунд!")
                     .setPositiveButton("ОК", new DialogInterface.OnClickListener() {
@@ -123,36 +108,31 @@ public class MainGameFragment extends MyCommonFragment
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         labyrinthView.onPause();
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         labyrinthView.onResume();
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
 
     }
 
     @Override
-    public void onNavigationItemClicked()
-    {
+    public void onNavigationItemClicked() {
         super.onNavigationItemClicked();
         labyrinthView.onPause();
     }
 
     @Override
-    public void onNavigationItemComeBack()
-    {
+    public void onNavigationItemComeBack() {
         super.onNavigationItemComeBack();
         labyrinthView.onResume();
     }

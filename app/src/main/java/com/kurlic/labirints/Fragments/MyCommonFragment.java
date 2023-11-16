@@ -6,66 +6,59 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-public class MyCommonFragment extends Fragment
-{
+public class MyCommonFragment extends Fragment {
     public String uniqueTag;
     protected String ToolBarName;
 
     protected AppCompatActivity activityCompat;
-    MyCommonFragment(String uniqueTag, AppCompatActivity activityCompat)
-    {
+
+    MyCommonFragment(String uniqueTag, AppCompatActivity activityCompat) {
         this.uniqueTag = uniqueTag;
         setActivityCompat(activityCompat);
     }
-    public void onNavigationItemClicked()
-    {
 
-    };
+    public void onNavigationItemClicked() {
 
-    public void onNavigationItemComeBack()
-    {
-    };
+    }
 
-    public void onEnter()
-    {
+    ;
+
+    public void onNavigationItemComeBack() {
+    }
+
+    ;
+
+    public void onEnter() {
         updateToolBar();
     }
 
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
     }
 
-    void updateToolBar()
-    {
-        if(getActivityCompat() != null)
-        {
-            if (getActivityCompat().getSupportActionBar() != null)
-            {
+    void updateToolBar() {
+        if (getActivityCompat() != null) {
+            if (getActivityCompat().getSupportActionBar() != null) {
                 getActivityCompat().getSupportActionBar().setTitle(ToolBarName);
             }
         }
     }
 
-    public AppCompatActivity getActivityCompat()
-    {
+    public AppCompatActivity getActivityCompat() {
         return activityCompat;
     }
 
-    public void setActivityCompat(AppCompatActivity activityCompat)
-    {
+    public void setActivityCompat(AppCompatActivity activityCompat) {
         this.activityCompat = activityCompat;
     }
 
-    public String getToolBarName()
-    {
+    public String getToolBarName() {
         return ToolBarName;
     }
 
-    public void setToolBarName(String toolBarName)
-    {
+    public void setToolBarName(String toolBarName) {
         ToolBarName = toolBarName;
     }
 }

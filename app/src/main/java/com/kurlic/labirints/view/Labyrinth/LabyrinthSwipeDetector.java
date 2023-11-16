@@ -6,8 +6,7 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 
 public class LabyrinthSwipeDetector extends GestureDetector.SimpleOnGestureListener
-{
-    LabyrinthView labyrinthView;
+{ LabyrinthView labyrinthView;
     LabyrinthSwipeDetector(LabyrinthView labyrinthView)
     {
         this.labyrinthView = labyrinthView;

@@ -36,9 +36,6 @@
                 android:value="" />
         </activity>
         <activity android:name=".IntroActivity" />
-        <service
-            android:name=".Notifications.RemindToPlayJob"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
 
     </application>
 

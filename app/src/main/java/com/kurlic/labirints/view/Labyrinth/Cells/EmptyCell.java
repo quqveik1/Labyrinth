@@ -10,8 +10,7 @@ import androidx.annotation.NonNull;
 import com.kurlic.labirints.view.Labyrinth.Character.Character;
 import com.kurlic.labirints.view.Labyrinth.LabyrinthView;
 
-public class EmptyCell extends LabyrinthCell
-{
+public class EmptyCell extends LabyrinthCell {
     public EmptyCell(LabyrinthView labyrinthView, int x, int y) {
         super(labyrinthView, x, y);
     }

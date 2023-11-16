@@ -23,10 +23,8 @@ import com.kurlic.labirints.SettingsData;
 import com.kurlic.labirints.SharedData;
 
 
-public class SettingsFragment extends MyCommonFragment
-{
-    public SettingsFragment(AppCompatActivity activity)
-    {
+public class SettingsFragment extends MyCommonFragment {
+    public SettingsFragment(AppCompatActivity activity) {
         super("SettingsFragment", activity);
         setToolBarName(getActivityCompat().getString(R.string.settings));
     }
@@ -36,8 +34,9 @@ public class SettingsFragment extends MyCommonFragment
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.settings_fragment, container, false);
 
         themeSpinner = rootView.findViewById(R.id.themeSpinner);
@@ -46,14 +45,12 @@ public class SettingsFragment extends MyCommonFragment
 
         createOnClickSpinnerAdapter(themeSpinner, new GetSetSpinnerData() {
             @Override
-            public String getData()
-            {
+            public String getData() {
                 return SharedData.getSettingsData().getTheme();
             }
 
             @Override
-            public void setData(String data)
-            {
+            public void setData(String data) {
                 SharedData.getSettingsData().setTheme(data);
             }
         });
@@ -64,14 +61,12 @@ public class SettingsFragment extends MyCommonFragment
 
         createOnClickSpinnerAdapter(languageSpinner, new GetSetSpinnerData() {
             @Override
-            public String getData()
-            {
+            public String getData() {
                 return SharedData.getSettingsData().getLanguage();
             }
 
             @Override
-            public void setData(String data)
-            {
+            public void setData(String data) {
                 SharedData.getSettingsData().setLanguage(data);
             }
         });
@@ -79,24 +74,21 @@ public class SettingsFragment extends MyCommonFragment
         return rootView;
     }
 
-    interface GetSetSpinnerData
-    {
-        public String getData();
-        public void setData(String data);
+    interface GetSetSpinnerData {
+        String getData();
+
+        void setData(String data);
     }
 
-    void createOnClickSpinnerAdapter(@NonNull Spinner spinner, GetSetSpinnerData data)
-    {
+    void createOnClickSpinnerAdapter(@NonNull Spinner spinner, GetSetSpinnerData data) {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedOption = parent.getItemAtPosition(position).toString();
 
                 String currentTheme = data.getData();
 
-                if(!selectedOption.equals(currentTheme))
-                {
+                if (!selectedOption.equals(currentTheme)) {
                     data.setData(selectedOption);
                     Toast.makeText(getContext(), getResources().getString(R.string.onOptionChangedMessage), Toast.LENGTH_SHORT).show();
                 }
@@ -109,18 +101,13 @@ public class SettingsFragment extends MyCommonFragment
         });
     }
 
-    void setDataToSpinnerFromSettings(String data, Spinner spinner)
-    {
-        try
-        {
+    void setDataToSpinnerFromSettings(String data, Spinner spinner) {
+        try {
             int spinnerPosition = ((ArrayAdapter) spinner.getAdapter()).getPosition(data);
-            if(spinnerPosition >= 0)
-            {
+            if (spinnerPosition >= 0) {
                 spinner.setSelection(spinnerPosition);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

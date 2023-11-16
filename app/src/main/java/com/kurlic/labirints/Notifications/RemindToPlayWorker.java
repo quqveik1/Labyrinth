@@ -24,17 +24,14 @@ import com.kurlic.labirints.R;
 import java.util.Random;
 
 
-public class RemindToPlayWorker extends Worker
-{
-    public RemindToPlayWorker(@NonNull Context context, @NonNull WorkerParameters workerParams)
-    {
+public class RemindToPlayWorker extends Worker {
+    public RemindToPlayWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
     @NonNull
     @Override
-    public Result doWork()
-    {
+    public Result doWork() {
         createNotificationChannel();
         sendNotification();
 
@@ -43,25 +40,21 @@ public class RemindToPlayWorker extends Worker
 
     private static final String CHANNEL_ID = "RemindToPlayId";
 
-    private void createNotificationChannel()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getApplicationContext().getString(R.string.app_name);
             String description = "RemindToPlayChannel";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
             NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
-            if (notificationManager != null)
-            {
+            if (notificationManager != null) {
                 notificationManager.createNotificationChannel(channel);
             }
         }
     }
 
-    private void sendNotification()
-    {
+    private void sendNotification() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         MainActivity.cleanDataForIntent();
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -82,8 +75,8 @@ public class RemindToPlayWorker extends Worker
                 .setAutoCancel(true);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
-        {
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED) {
             Log.e("Labyrinth", "No permission notifications");
             return;
         }

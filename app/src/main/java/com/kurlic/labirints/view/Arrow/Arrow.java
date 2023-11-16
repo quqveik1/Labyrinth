@@ -47,29 +47,23 @@ public class Arrow extends View {
 
     }
 
-    void commonConstructor(Context context, AttributeSet attrs)
-    {
-        if(attrs != null)
-        {
+    void commonConstructor(Context context, AttributeSet attrs) {
+        if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Arrow);
             String strDirection = array.getString(R.styleable.Arrow_direction);
-            if(strDirection.compareTo("left") == 0)
-            {
+            if (strDirection.compareTo("left") == 0) {
                 direction = DIRECTION_LEFT;
                 moveDelta = new Point(-1, 0);
             }
-            if(strDirection.compareTo("up")== 0)
-            {
+            if (strDirection.compareTo("up") == 0) {
                 direction = DIRECTION_UP;
                 moveDelta = new Point(0, -1);
             }
-            if(strDirection.compareTo("right") == 0)
-            {
+            if (strDirection.compareTo("right") == 0) {
                 direction = DIRECTION_RIGHT;
                 moveDelta = new Point(1, 0);
             }
-            if(strDirection.compareTo("down") == 0)
-            {
+            if (strDirection.compareTo("down") == 0) {
                 direction = DIRECTION_DOWN;
                 moveDelta = new Point(0, 1);
             }
@@ -82,7 +76,6 @@ public class Arrow extends View {
     }
 
 
-
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         Paint paint = new Paint();
@@ -93,47 +86,43 @@ public class Arrow extends View {
 
         Path triangle = null;
 
-        if(direction == DIRECTION_LEFT)
-        {
+        if (direction == DIRECTION_LEFT) {
             triangle = drawLeft();
         }
-        if(direction == DIRECTION_RIGHT)
-        {
+        if (direction == DIRECTION_RIGHT) {
             triangle = drawRight();
         }
-        if(direction == DIRECTION_UP)
-        {
+        if (direction == DIRECTION_UP) {
             triangle = drawUp();
         }
-        if(direction == DIRECTION_DOWN)
-        {
+        if (direction == DIRECTION_DOWN) {
             triangle = drawDown();
         }
 
 
-        if (triangle != null)canvas.drawPath(triangle, paint);
+        if (triangle != null) {
+            canvas.drawPath(triangle, paint);
+        }
     }
 
     @NonNull
-    private Path drawLeft()
-    {
+    private Path drawLeft() {
         Path triangle = new Path();
-        int halfOfHeight = getHeight()/2;
+        int halfOfHeight = getHeight() / 2;
         triangle.setFillType(Path.FillType.EVEN_ODD);
         triangle.moveTo(getWidth(), 0);
         triangle.lineTo(getWidth(), getHeight());
         triangle.lineTo(0, halfOfHeight);
         triangle.lineTo(getWidth(), 0);
         triangle.close();
-        return  triangle;
+        return triangle;
     }
 
 
     @NonNull
-    private Path drawRight()
-    {
+    private Path drawRight() {
         Path triangle = new Path();
-        int halfOfHeight = getHeight()/2;
+        int halfOfHeight = getHeight() / 2;
         triangle.setFillType(Path.FillType.EVEN_ODD);
         triangle.moveTo(0, 0);
         triangle.lineTo(getWidth(), halfOfHeight);
@@ -144,10 +133,9 @@ public class Arrow extends View {
     }
 
     @NonNull
-    private Path drawUp()
-    {
+    private Path drawUp() {
         Path triangle = new Path();
-        int halfOfWidth = getWidth()/2;
+        int halfOfWidth = getWidth() / 2;
         triangle.setFillType(Path.FillType.EVEN_ODD);
         triangle.moveTo(0, getHeight());
         triangle.lineTo(halfOfWidth, 0);
@@ -156,11 +144,11 @@ public class Arrow extends View {
         triangle.close();
         return triangle;
     }
+
     @NonNull
-    private Path drawDown()
-    {
+    private Path drawDown() {
         Path triangle = new Path();
-        int halfOfWidth = getWidth()/2;
+        int halfOfWidth = getWidth() / 2;
         triangle.setFillType(Path.FillType.EVEN_ODD);
         triangle.moveTo(0, 0);
         triangle.lineTo(getWidth(), 0);
@@ -171,39 +159,22 @@ public class Arrow extends View {
     }
 
 
-
     @Override
-    public boolean onTouchEvent(@NonNull MotionEvent event)
-    {
-        if(event.getAction() == MotionEvent.ACTION_DOWN)
-        {
-            if(direction == DIRECTION_LEFT)
-            {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (direction == DIRECTION_LEFT) {
                 labyrinthView.getCharacter().moveLeft();
             }
-            if(direction == DIRECTION_RIGHT)
-            {
+            if (direction == DIRECTION_RIGHT) {
                 labyrinthView.getCharacter().moveRight();
             }
-            if(direction == DIRECTION_UP)
-            {
+            if (direction == DIRECTION_UP) {
                 labyrinthView.getCharacter().moveUp();
             }
-            if(direction == DIRECTION_DOWN)
-            {
+            if (direction == DIRECTION_DOWN) {
                 labyrinthView.getCharacter().moveDown();
             }
 
-        }
-
-        if(event.getAction() == MotionEvent.ACTION_UP)
-        {
-            //touchThread.setNeedToRun(false);
-        }
-
-        if(event.getAction() == MotionEvent.ACTION_OUTSIDE)
-        {
-            //touchThread.setNeedToRun(false);
         }
         return true;
     }

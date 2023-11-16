@@ -31,48 +31,42 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class UserStatisticFragment extends MyCommonFragment
-{
+public class UserStatisticFragment extends MyCommonFragment {
     LabyrinthUserData labyrinthUserData;
     EditText userNameTextEdit;
     TextView userCFinishedLevelsTextView;
     TextView userMinTimeTextView;
 
-    public UserStatisticFragment(AppCompatActivity activity)
-    {
+    public UserStatisticFragment(AppCompatActivity activity) {
         super("UserStatisticFragment", activity);
         setToolBarName(getActivityCompat().getString(R.string.myStatistic));
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.user_statistic_fragment, container, false);
         userNameTextEdit = rootView.findViewById(R.id.userNameEditText);
         labyrinthUserData = SharedData.getLabyrinthUserData();
-        if(labyrinthUserData != null)
-        {
+        if (labyrinthUserData != null) {
             userNameTextEdit.setText(labyrinthUserData.getUserName());
         }
-        userNameTextEdit.addTextChangedListener(new TextWatcher()
-        {
+        userNameTextEdit.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable s)
-            {
+            public void afterTextChanged(Editable s) {
                 labyrinthUserData.setUserName(s.toString());
             }
         });
@@ -108,23 +102,21 @@ public class UserStatisticFragment extends MyCommonFragment
 
 
     @Override
-    public void onHiddenChanged(boolean hidden)
-    {
+    public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         displayUserData();
     }
 
-    void displayUserData()
-    {
+    void displayUserData() {
         userCFinishedLevelsTextView.setText(Integer.toString(labyrinthUserData.getCLabyrinthFinished()));
 
         long time = labyrinthUserData.getMinTime();
         String date = SharedData.timeInMSToString(time);
         userMinTimeTextView.setText(date);
     }
+
     @Override
-    public void onNavigationItemClicked()
-    {
+    public void onNavigationItemClicked() {
         hideKeyboard(getView());
     }
 }

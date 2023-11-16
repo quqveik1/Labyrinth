@@ -1,4 +1,5 @@
 package com.kurlic.labirints.view.Labyrinth;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,18 +13,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 
-public class LabyrinthGenerator implements Parcelable
-{
-    private int dimensionX, dimensionY; // dimension of maze
-    private Cell[][] cells; // 2d array of Cells
+public class LabyrinthGenerator implements Parcelable {
+    private int dimensionX, dimensionY;
+    private Cell[][] cells;
     private Random random = new Random();
-    LabyrinthView labyrinthView;// The random object
+    LabyrinthView labyrinthView;
 
-    // initialize with x and y the same
     public LabyrinthGenerator(int aDimension, LabyrinthView labyrinthView) {
-        // Initialize
         this(aDimension, aDimension, labyrinthView);
     }
+
     // constructor
     public LabyrinthGenerator(int xDimension, int yDimension, LabyrinthView labyrinthView) {
         dimensionX = xDimension;
@@ -36,20 +35,15 @@ public class LabyrinthGenerator implements Parcelable
     }
 
 
-    protected LabyrinthGenerator(@NonNull Parcel in)
-    {
+    protected LabyrinthGenerator(@NonNull Parcel in) {
         dimensionX = in.readInt();
         dimensionY = in.readInt();
     }
 
 
-
-    void fillLabyrinthCell()
-    {
-        for (int x = 0; x < dimensionX; x++)
-        {
-            for (int y = 0; y < dimensionY; y++)
-            {
+    void fillLabyrinthCell() {
+        for (int x = 0; x < dimensionX; x++) {
+            for (int y = 0; y < dimensionY; y++) {
                 Cell cell = getCell(x, y);
                 LabyrinthCell labyrinthCell = getLabyrinthView().getCell(x, y);
                 setLabyrinthCellsBorders(cell, labyrinthCell);
@@ -58,83 +52,42 @@ public class LabyrinthGenerator implements Parcelable
         }
     }
 
-    void setSolutionPath(@NonNull Cell cell, @NonNull LabyrinthCell labyrinthCell)
-    {
+    void setSolutionPath(@NonNull Cell cell, @NonNull LabyrinthCell labyrinthCell) {
         labyrinthCell.setInSolutionPath(cell.inPath);
     }
 
 
-    void setLabyrinthCellsBorders(@NonNull Cell cell, @NonNull LabyrinthCell labyrinthCell)
-    {
-        if(cell.isCellLeftNeighbor())
-        {
-            if(labyrinthCell != null)
-            {
+    void setLabyrinthCellsBorders(@NonNull Cell cell, @NonNull LabyrinthCell labyrinthCell) {
+        if (cell.isCellLeftNeighbor()) {
+            if (labyrinthCell != null) {
                 labyrinthCell.setLeftBorder(false);
             }
         }
 
-        if(cell.isCellUpNeighbor())
-        {
-            if(labyrinthCell != null)
-            {
+        if (cell.isCellUpNeighbor()) {
+            if (labyrinthCell != null) {
                 labyrinthCell.setUpBorder(false);
             }
         }
 
-        if(cell.isCellRightNeighbor())
-        {
-            if(labyrinthCell != null)
-            {
+        if (cell.isCellRightNeighbor()) {
+            if (labyrinthCell != null) {
                 labyrinthCell.setRightBorder(false);
             }
         }
 
-        if(cell.isCellBelowNeighbor())
-        {
-            if(labyrinthCell != null)
-            {
+        if (cell.isCellBelowNeighbor()) {
+            if (labyrinthCell != null) {
                 labyrinthCell.setDownBorder(false);
             }
         }
     }
 
-
-
-    void fillThickLabyrinthCells()
-    {
-        for (int x = 0; x < dimensionX; x++)
-        {
-            for (int y = 0; y < dimensionY; y++)
-            {
-                Cell startCell = getCell(x, y);
-                if (startCell != null)
-                {
-                    if(!startCell.isCellRightNeighbor())
-                    {
-                        getLabyrinthView().setLabyrinthCell(new WallCell(getLabyrinthView(), 2 * x + 1, 2 * y - 1));
-                        getLabyrinthView().setLabyrinthCell(new WallCell(getLabyrinthView(), 2 * x + 1, 2 * y));
-                        getLabyrinthView().setLabyrinthCell(new WallCell(getLabyrinthView(), 2 * x + 1, 2 * y + 1));
-                    }
-                    if(!startCell.isCellBelowNeighbor())
-                    {
-                        getLabyrinthView().setLabyrinthCell(new WallCell(getLabyrinthView(), 2 * x - 1, 2 * y + 1));
-                        getLabyrinthView().setLabyrinthCell(new WallCell(getLabyrinthView(), 2 * x, 2 * y + 1));
-                        getLabyrinthView().setLabyrinthCell(new WallCell(getLabyrinthView(), 2 * x + 1, 2 * y + 1));
-                    }
-                }
-            }
-        }
-    }
-
-
-    public LabyrinthView getLabyrinthView()
-    {
+    public LabyrinthView getLabyrinthView() {
         return labyrinthView;
     }
 
-    public void setLabyrinthView(LabyrinthView labyrinthView)
-    {
+    public void setLabyrinthView(LabyrinthView labyrinthView) {
         this.labyrinthView = labyrinthView;
     }
 
@@ -143,40 +96,34 @@ public class LabyrinthGenerator implements Parcelable
         cells = new Cell[dimensionX][dimensionY];
         for (int x = 0; x < dimensionX; x++) {
             for (int y = 0; y < dimensionY; y++) {
-                cells[x][y] = new Cell(x, y, false); // create cell (see Cell constructor)
+                cells[x][y] = new Cell(x, y, false);
             }
         }
     }
 
     @Override
-    public int describeContents()
-    {
+    public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags)
-    {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(dimensionX);
         dest.writeInt(dimensionY);
     }
 
-    public static final Creator<LabyrinthGenerator> CREATOR = new Creator<LabyrinthGenerator>()
-    {
+    public static final Creator<LabyrinthGenerator> CREATOR = new Creator<LabyrinthGenerator>() {
         @Override
-        public LabyrinthGenerator createFromParcel(Parcel in)
-        {
+        public LabyrinthGenerator createFromParcel(Parcel in) {
             return new LabyrinthGenerator(in);
         }
 
         @Override
-        public LabyrinthGenerator[] newArray(int size)
-        {
+        public LabyrinthGenerator[] newArray(int size) {
             return new LabyrinthGenerator[size];
         }
     };
 
-    // inner class to represent a cell
     private class Cell {
         int x, y; // coordinates
         // cells this cell is connected to
@@ -195,16 +142,19 @@ public class LabyrinthGenerator implements Parcelable
         boolean wall = true;
         // if true, has yet to be used in generation
         boolean open = true;
+
         // construct Cell at x, y
         Cell(int x, int y) {
             this(x, y, true);
         }
+
         // construct Cell at x, y and with whether it isWall
         Cell(int x, int y, boolean isWall) {
             this.x = x;
             this.y = y;
             this.wall = isWall;
         }
+
         // add a neighbor to this cell, and this cell as a neighbor to the other
         void addNeighbor(Cell other) {
             if (!this.neighbors.contains(other)) { // avoid duplicates
@@ -214,10 +164,12 @@ public class LabyrinthGenerator implements Parcelable
                 other.neighbors.add(this);
             }
         }
+
         // used in updateGrid()
         boolean isCellBelowNeighbor() {
             return this.neighbors.contains(new Cell(this.x, this.y + 1));
         }
+
         // used in updateGrid()
         boolean isCellRightNeighbor() {
             return this.neighbors.contains(new Cell(this.x + 1, this.y));
@@ -226,23 +178,31 @@ public class LabyrinthGenerator implements Parcelable
         boolean isCellUpNeighbor() {
             return this.neighbors.contains(new Cell(this.x, this.y - 1));
         }
+
         // used in updateGrid()
         boolean isCellLeftNeighbor() {
             return this.neighbors.contains(new Cell(this.x - 1, this.y));
         }
+
         // useful Cell representation
         @Override
         public String toString() {
-            if(this != null)return String.format("Cell(%s, %s)", x, y);
+            if (this != null) {
+                return String.format("Cell(%s, %s)", x, y);
+            }
             return null;
         }
+
         // useful Cell equivalence
         @Override
         public boolean equals(Object other) {
-            if (!(other instanceof Cell)) return false;
+            if (!(other instanceof Cell)) {
+                return false;
+            }
             Cell otherCell = (Cell) other;
             return (this.x == otherCell.x && this.y == otherCell.y);
         }
+
         // should be overridden with equals
         @Override
         public int hashCode() {
@@ -250,17 +210,22 @@ public class LabyrinthGenerator implements Parcelable
             return this.x + this.y * 256;
         }
     }
+
     // generate from upper left (In computing the y increases down often)
     private void generateMaze() {
         generateMaze(0, 0);
     }
+
     // generate the maze from coordinates x, y
     private void generateMaze(int x, int y) {
         generateMaze(getCell(x, y)); // generate from Cell
     }
+
     private void generateMaze(Cell startAt) {
         // don't generate from cell not there
-        if (startAt == null) return;
+        if (startAt == null) {
+            return;
+        }
         startAt.open = false; // indicate cell closed for generation
         ArrayList<Cell> cells = new ArrayList<>();
         cells.add(startAt);
@@ -270,9 +235,11 @@ public class LabyrinthGenerator implements Parcelable
             // this is to reduce but not completely eliminate the number
             //   of long twisting halls with short easy to detect branches
             //   which results in easy mazes
-            if (random.nextInt(10)==0)
+            if (random.nextInt(10) == 0) {
                 cell = cells.remove(random.nextInt(cells.size()));
-            else cell = cells.remove(cells.size() - 1);
+            } else {
+                cell = cells.remove(cells.size() - 1);
+            }
             // for collection
             ArrayList<Cell> neighbors = new ArrayList<>();
             // cells that could potentially be neighbors
@@ -284,10 +251,14 @@ public class LabyrinthGenerator implements Parcelable
             };
             for (Cell other : potentialNeighbors) {
                 // skip if outside, is a wall or is not opened
-                if (other==null || other.wall || !other.open) continue;
+                if (other == null || other.wall || !other.open) {
+                    continue;
+                }
                 neighbors.add(other);
             }
-            if (neighbors.isEmpty()) continue;
+            if (neighbors.isEmpty()) {
+                continue;
+            }
             // get random cell
             Cell selected = neighbors.get(random.nextInt(neighbors.size()));
             // add as neighbor
@@ -297,6 +268,7 @@ public class LabyrinthGenerator implements Parcelable
             cells.add(selected);
         }
     }
+
     // used to get a Cell at x, y; returns null out of bounds
     public Cell getCell(int x, int y) {
         try {
@@ -308,8 +280,9 @@ public class LabyrinthGenerator implements Parcelable
 
     public void solve() {
         // default solve top left to bottom right
-        this.solve(0, 0, dimensionX - 1, dimensionY -1);
+        this.solve(0, 0, dimensionX - 1, dimensionY - 1);
     }
+
     // solve the maze starting from the start state (A-star algorithm)
     public void solve(int startX, int startY, int endX, int endY) {
         // re initialize cells for path finding
@@ -326,29 +299,41 @@ public class LabyrinthGenerator implements Parcelable
         ArrayList<Cell> openCells = new ArrayList<>();
         // cell being considered
         Cell endCell = getCell(endX, endY);
-        if (endCell == null) return; // quit if end out of bounds
+        if (endCell == null) {
+            return; // quit if end out of bounds
+        }
         { // anonymous block to delete start, because not used later
             Cell start = getCell(startX, startY);
-            if (start == null) return; // quit if start out of bounds
+            if (start == null) {
+                return; // quit if start out of bounds
+            }
             start.projectedDist = getProjectedDistance(start, 0, endCell);
             start.visited = true;
             openCells.add(start);
         }
         boolean solving = true;
         while (solving) {
-            if (openCells.isEmpty()) return; // quit, no path
+            if (openCells.isEmpty()) {
+                return; // quit, no path
+            }
             // sort openCells according to least projected distance
-            Collections.sort(openCells, new Comparator<Cell>(){
+            Collections.sort(openCells, new Comparator<Cell>() {
                 @Override
                 public int compare(Cell cell1, Cell cell2) {
                     double diff = cell1.projectedDist - cell2.projectedDist;
-                    if (diff > 0) return 1;
-                    else if (diff < 0) return -1;
-                    else return 0;
+                    if (diff > 0) {
+                        return 1;
+                    } else if (diff < 0) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
                 }
             });
             Cell current = openCells.remove(0); // pop cell least projectedDist
-            if (current == endCell) break; // at end
+            if (current == endCell) {
+                break; // at end
+            }
             for (Cell neighbor : current.neighbors) {
                 double projDist = getProjectedDistance(neighbor,
                         current.travelled + 1, endCell);
@@ -358,8 +343,9 @@ public class LabyrinthGenerator implements Parcelable
                     neighbor.visited = true;
                     neighbor.projectedDist = projDist;
                     neighbor.travelled = current.travelled + 1;
-                    if (!openCells.contains(neighbor))
+                    if (!openCells.contains(neighbor)) {
                         openCells.add(neighbor);
+                    }
                 }
             }
         }
@@ -371,9 +357,10 @@ public class LabyrinthGenerator implements Parcelable
             backtracking.inPath = true;
         }
     }
+
     // get the projected distance
     // (A star algorithm consistent)
-    public double getProjectedDistance(@NonNull Cell current, double travelled, Cell end) {
+    public double getProjectedDistance(@NonNull Cell current, double travelled, @NonNull Cell end) {
         return travelled + Math.abs(current.x - end.x) +
                 Math.abs(current.y - current.x);
     }
